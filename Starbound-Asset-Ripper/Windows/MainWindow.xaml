@@ -1,12 +1,13 @@
-﻿<Window x:Class="Starbound_Asset_Ripper.MainWindow"
+﻿<Controls:MetroWindow x:Class="Starbound_Asset_Ripper.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:Starbound_Asset_Ripper"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Starbound Asset Ripper" Height="350" Width="525">
     <Grid>
-        
+        <Menu HorizontalAlignment="Left" Height="34" VerticalAlignment="Top" Width="517"/>
     </Grid>
-</Window>
+</Controls:MetroWindow>
