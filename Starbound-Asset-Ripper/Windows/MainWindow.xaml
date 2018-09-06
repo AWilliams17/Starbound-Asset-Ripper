@@ -6,8 +6,46 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:Starbound_Asset_Ripper"
         mc:Ignorable="d"
-        Title="Starbound Asset Ripper" Height="350" Width="525">
-    <Grid>
-        <Menu HorizontalAlignment="Left" Height="34" VerticalAlignment="Top" Width="517"/>
-    </Grid>
+        Title="Starbound Asset Ripper" Height="324.638" Width="390.58">
+    <DockPanel LastChildFill="False" Background="Black">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File" Name="meFile">
+                <MenuItem Header="Help" IsCheckable="true"/>
+                <MenuItem Header="Exit" IsCheckable="true"/>
+            </MenuItem>
+            <MenuItem Header="About" Name="meAbout">
+                <MenuItem Header="Github" IsCheckable="true"/>
+                <MenuItem Header="Reddit" IsCheckable="true"/>
+                <MenuItem Header="Update" IsCheckable="true"/>
+            </MenuItem>
+        </Menu>
+        <StackPanel x:Name="doelenContentPanel" Orientation="Vertical" Width="381" Margin="0,15,0,0">
+            <StackPanel Height="26" Orientation="Horizontal" Margin="10,0">
+                <Label Content="Label"/>
+                <TextBox TextWrapping="Wrap" Text="TextBox" Width="271"/>
+                <Button Content="..." Width="46"/>
+            </StackPanel>
+            <StackPanel Height="26" Orientation="Horizontal" Margin="10,10">
+                <Label Content="Label"/>
+                <TextBox TextWrapping="Wrap" Text="TextBox" Width="271"/>
+                <Button Content="..." Width="46"/>
+            </StackPanel>
+            <ListView Height="100" Margin="10,0">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Grid Height="26" Margin="10,10">
+                <Button Content="Unpack All" Width="105" HorizontalAlignment="Left"/>
+                <Button Content="Unpack Selected" Width="105" HorizontalAlignment="Right"/>
+            </Grid>
+            <Separator Height="28" Margin="0,-13"/>
+            <StackPanel Height="26" Orientation="Horizontal" Margin="10,0">
+                <Label Content="Label"/>
+                <Label Content="Label"/>
+            </StackPanel>
+        </StackPanel>
+    </DockPanel>
 </Controls:MetroWindow>
