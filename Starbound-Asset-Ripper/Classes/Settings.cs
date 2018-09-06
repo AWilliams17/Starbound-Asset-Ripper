@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 
 namespace Starbound_Asset_Ripper
 {
@@ -40,6 +39,7 @@ namespace Starbound_Asset_Ripper
             }
         }
     }
+
     class Validators
     {
 

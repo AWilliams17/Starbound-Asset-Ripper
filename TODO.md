@@ -1,10 +1,6 @@
 ## Configuration
-* [ ] Handle cases for when the configuration file can not be made (Permissions, conflicts)
-* [ ] Handle cases for when the configuration file is loaded, but things are missing in it
-* [ ] Verify the config exists
-* [ ] Config generation
-* [ ] Config loading
-* [ ] Config saving
+* [ ] Handle cases for when the registry can not be saved to
+* [ ] Handle cases for when the registry can not be read from
 
 ## Unpacking
 * [ ] Verify the folder the program is looking at is correct (search for .pak files)

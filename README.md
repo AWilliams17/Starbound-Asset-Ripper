@@ -7,9 +7,9 @@ and probably won't need to unpack anything else, I still
 feel the need to make this tool. So here you go.
 
 ## Features
-Configuration file which automatically is
-read and saved, as well as auto-detection of the
-Starbound workshop folder and CLI Asset Unpacker paths.
+Configuration is saved to the registry automatically, 
+as well as auto-detection of the Starbound workshop folder 
+and CLI Asset Unpacker paths.  
 Also you can check for updates through the tool itself.
 
 ## Usage
@@ -27,4 +27,4 @@ which .pak file to unpack, or you can unpack every .pak
 file the tool has found.  
   
 The tool also saves the paths, so no need to keep
-putting them in everytime you restart the tool.  
+putting them in every time you restart the tool.  
