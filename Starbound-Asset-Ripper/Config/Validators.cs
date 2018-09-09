@@ -1,7 +1,7 @@
 ﻿using Registrar;
 using System.IO;
 
-namespace Starbound_Asset_Ripper.Config
+namespace Starbound_Asset_Ripper.ConfigValidators
 {
     class Validators
     {
@@ -14,6 +14,10 @@ namespace Starbound_Asset_Ripper.Config
 
             public bool Validate(object value)
             {
+                if (ValidatorConverters.ValidatorStringConverter(value) == "")
+                {
+                    return true;
+                }
                 return Directory.Exists(ValidatorConverters.ValidatorStringConverter(value));
             }
         }

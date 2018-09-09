@@ -6,7 +6,7 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:Starbound_Asset_Ripper"
         mc:Ignorable="d"
-        Title="Starbound Asset Ripper" Height="309.421" Width="390.58" Background="#FF252525">
+        Title="Starbound Asset Ripper" Height="309.421" Width="390.58" Background="#FF252525" TitleCharacterCasing="Normal">
     <DockPanel LastChildFill="False">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File" x:Name="menuFileDropdown">

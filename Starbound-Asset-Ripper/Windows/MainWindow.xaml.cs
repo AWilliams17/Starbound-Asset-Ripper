@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +17,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using Registrar;
+using Starbound_Asset_Ripper.ConfigContainer;
+
 
 namespace Starbound_Asset_Ripper
 {
@@ -22,11 +27,20 @@ namespace Starbound_Asset_Ripper
     /// </summary>
     public partial class MainWindow
     {
+        public static Config config = new Config();
+
         public MainWindow()
         {
             InitializeComponent();
             ResizeMode = 0;
+            Closing += MainWindow_Closing;
 
+            string loadSettingsResult = config.settings.LoadSettings();
+            if (loadSettingsResult != null || !config.settings.RootKeyExists())
+            {
+                // TODO: Should be a message box here.
+                config.settings.SaveSettings();
+            }
         }
 
         private void OutputPathBtn_Click(object sender, RoutedEventArgs e)
@@ -46,17 +60,17 @@ namespace Starbound_Asset_Ripper
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            Application.Current.Shutdown();
         }
 
         private void GithubBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            Process.Start("https://github.com/AWilliams17/Starbound-Asset-Ripper/");
         }
 
         private void RedditBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
         private void UpdateBtn_Click(object sender, RoutedEventArgs e)
@@ -72,6 +86,11 @@ namespace Starbound_Asset_Ripper
         private void UnpackAllBtn_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void MainWindow_Closing(object sender, EventArgs e)
+        {
+            config.settings.SaveSettings();
         }
     }
 }
