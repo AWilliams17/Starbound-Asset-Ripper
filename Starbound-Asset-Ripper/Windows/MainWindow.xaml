@@ -10,25 +10,25 @@
     <DockPanel LastChildFill="False">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File" x:Name="menuFileDropdown">
-                <MenuItem Header="Help" IsCheckable="true"/>
-                <MenuItem Header="Exit" IsCheckable="true"/>
+                <MenuItem x:Name="HelpBtn" Header="Help" IsCheckable="true" Click="HelpBtn_Click"/>
+                <MenuItem x:Name="ExitBtn" Header="Exit" IsCheckable="true" Click="ExitBtn_Click"/>
             </MenuItem>
             <MenuItem Header="About" x:Name="menuAboutDropdown">
-                <MenuItem Header="Github" IsCheckable="true"/>
-                <MenuItem Header="Reddit" IsCheckable="true"/>
-                <MenuItem Header="Update" IsCheckable="true"/>
+                <MenuItem x:Name="GithubBtn" Header="Github" IsCheckable="true" Click="GithubBtn_Click"/>
+                <MenuItem x:Name="RedditBtn" Header="Reddit" IsCheckable="true" Click="RedditBtn_Click"/>
+                <MenuItem x:Name="UpdateBtn" Header="Update" IsCheckable="true" Click="UpdateBtn_Click"/>
             </MenuItem>
         </Menu>
         <StackPanel x:Name="doelenContentPanel" Orientation="Vertical" Width="385" Margin="0,5,0,0">
             <StackPanel Height="26" Orientation="Horizontal" Margin="10,0">
                 <Label Content="Steam Path:" Width="76"/>
                 <TextBox x:Name="SteamPathTextBox" TextWrapping="Wrap" Text="Path to Steam installation..." Width="243"/>
-                <Button Content="..." Width="46"/>
+                <Button x:Name="SteamPathBtn" Content="..." Width="46" Click="SteamPathBtn_Click" Height="26" VerticalAlignment="Top"/>
             </StackPanel>
             <StackPanel Height="26" Orientation="Horizontal" Margin="10,10">
                 <Label Content="Output Path:" Width="76"/>
                 <TextBox x:Name="OutputPathTextBox" TextWrapping="Wrap" Text="Path to output folder..." Width="243"/>
-                <Button Content="..." Width="46"/>
+                <Button x:Name="OutputPathBtn" Content="..." Width="46" Click="OutputPathBtn_Click"/>
             </StackPanel>
             <ListView x:Name="PakListBox" Height="100" Margin="10,0" Background="#FF2C2A2A">
                 <ListView.View>
@@ -38,8 +38,8 @@
                 </ListView.View>
             </ListView>
             <Grid Height="26" Margin="10,10">
-                <Button x:Name="UnpackAllBtn" Content="Unpack All" Width="105" HorizontalAlignment="Left"/>
-                <Button x:Name="UnpackSelectedBtn" Content="Unpack Selected" Width="105" HorizontalAlignment="Right"/>
+                <Button x:Name="UnpackAllBtn" Content="Unpack All" Width="105" HorizontalAlignment="Left" Click="UnpackAllBtn_Click"/>
+                <Button x:Name="UnpackSelectedBtn" Content="Unpack Selected" Width="105" HorizontalAlignment="Right" Click="UnpackSelectedBtn_Click"/>
             </Grid>
             <Separator Height="14" Margin="0,-13"/>
             <StackPanel Height="26" Orientation="Horizontal" Margin="10,0">
