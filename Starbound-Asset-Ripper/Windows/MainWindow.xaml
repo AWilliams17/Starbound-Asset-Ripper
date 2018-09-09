@@ -9,11 +9,11 @@
         Title="Starbound Asset Ripper" Height="309.421" Width="390.58" Background="#FF252525">
     <DockPanel LastChildFill="False">
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="File" Name="meFile">
+            <MenuItem Header="File" x:Name="menuFileDropdown">
                 <MenuItem Header="Help" IsCheckable="true"/>
                 <MenuItem Header="Exit" IsCheckable="true"/>
             </MenuItem>
-            <MenuItem Header="About" Name="meAbout">
+            <MenuItem Header="About" x:Name="menuAboutDropdown">
                 <MenuItem Header="Github" IsCheckable="true"/>
                 <MenuItem Header="Reddit" IsCheckable="true"/>
                 <MenuItem Header="Update" IsCheckable="true"/>
@@ -22,15 +22,15 @@
         <StackPanel x:Name="doelenContentPanel" Orientation="Vertical" Width="385" Margin="0,5,0,0">
             <StackPanel Height="26" Orientation="Horizontal" Margin="10,0">
                 <Label Content="Steam Path:" Width="76"/>
-                <TextBox TextWrapping="Wrap" Text="Path to Steam installation..." Width="243"/>
+                <TextBox x:Name="SteamPathTextBox" TextWrapping="Wrap" Text="Path to Steam installation..." Width="243"/>
                 <Button Content="..." Width="46"/>
             </StackPanel>
             <StackPanel Height="26" Orientation="Horizontal" Margin="10,10">
                 <Label Content="Output Path:" Width="76"/>
-                <TextBox TextWrapping="Wrap" Text="Path to output folder..." Width="243"/>
+                <TextBox x:Name="OutputPathTextBox" TextWrapping="Wrap" Text="Path to output folder..." Width="243"/>
                 <Button Content="..." Width="46"/>
             </StackPanel>
-            <ListView Height="100" Margin="10,0" Background="#FF2C2A2A">
+            <ListView x:Name="PakListBox" Height="100" Margin="10,0" Background="#FF2C2A2A">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn/>
@@ -38,13 +38,13 @@
                 </ListView.View>
             </ListView>
             <Grid Height="26" Margin="10,10">
-                <Button Content="Unpack All" Width="105" HorizontalAlignment="Left"/>
-                <Button Content="Unpack Selected" Width="105" HorizontalAlignment="Right"/>
+                <Button x:Name="UnpackAllBtn" Content="Unpack All" Width="105" HorizontalAlignment="Left"/>
+                <Button x:Name="UnpackSelectedBtn" Content="Unpack Selected" Width="105" HorizontalAlignment="Right"/>
             </Grid>
             <Separator Height="14" Margin="0,-13"/>
             <StackPanel Height="26" Orientation="Horizontal" Margin="10,0">
                 <Label Content="Status:"/>
-                <Label Content="'Status goes here'"/>
+                <Label x:Name="StatusLabel" Content="'Status goes here'"/>
             </StackPanel>
         </StackPanel>
     </DockPanel>
