@@ -39,7 +39,7 @@ namespace Web.Utils
             }
             else
             {
-                result = "Connection Failed";
+                result = "Connection Failed.";
             }
 
             return result;
