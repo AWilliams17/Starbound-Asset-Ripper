@@ -10,6 +10,7 @@ namespace Web.Utils
         {
             string downloadResult = null;
             WebClient webClient = new WebClient();
+            webClient.Headers["user-agent"] = "WebUtils Parsing";
 
             if (CanConnect(Url, TimeOut))
             {
@@ -44,11 +45,14 @@ namespace Web.Utils
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
             request.Timeout = TimeOut * 1000; // Miliseconds
             request.Method = "HEAD";
+            request.UserAgent = "WebUtils Parsing";
+            request.AllowAutoRedirect = true;
             try
             {
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
-                    return response.StatusCode == HttpStatusCode.OK;
+                    int statusCode = (int)response.StatusCode;
+                    return (statusCode >= 200 && statusCode <= 299);
                 }
             }
             catch (WebException)
