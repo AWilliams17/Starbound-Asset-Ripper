@@ -10,13 +10,13 @@ namespace Starbound_Asset_Ripper.ConfigContainer
 
         private void RegisterSettings()
         {
-            Registrar.RegOption steamDirectory = new Registrar.RegOption("SteamDirectory", validators.DirectoryValidator, "", typeof(string));
-            Registrar.RegOption outputDirectory = new Registrar.RegOption("OutputDirectory", validators.DirectoryValidator, "", typeof(string));
-            Registrar.RegOption workshopDirectory = new Registrar.RegOption("WorkshopDirectory", validators.DirectoryValidator, "", typeof(string));
+            Registrar.RegOption steamPath = new Registrar.RegOption("SteamPath", validators.DirectoryValidator, "", typeof(string));
+            Registrar.RegOption outputPath= new Registrar.RegOption("OutputPath", validators.DirectoryValidator, "", typeof(string));
+            Registrar.RegOption workshopPath = new Registrar.RegOption("WorkshopPath", validators.DirectoryValidator, "", typeof(string));
 
-            settings.RegisterSetting("SteamDirectory", steamDirectory);
-            settings.RegisterSetting("OutputDirectory", outputDirectory);
-            settings.RegisterSetting("WorkshopDirectory", workshopDirectory);
+            settings.RegisterSetting("SteamPath", steamPath);
+            settings.RegisterSetting("OutputPath", outputPath);
+            settings.RegisterSetting("WorkshopPath", workshopPath);
         }
 
         public Config()

@@ -6,7 +6,7 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:Starbound_Asset_Ripper"
         mc:Ignorable="d"
-        Title="Starbound Asset Ripper" Height="309.421" Width="390.58" Background="#FF252525" TitleCharacterCasing="Normal">
+        Title="Starbound Asset Ripper" Height="313.421" Width="390.58" Background="#FF252525" TitleCharacterCasing="Normal">
     <DockPanel LastChildFill="False">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File" x:Name="menuFileDropdown">
@@ -38,8 +38,8 @@
                 </ListView.View>
             </ListView>
             <Grid Height="26" Margin="10,10">
-                <Button x:Name="UnpackAllBtn" Content="Unpack All" Width="105" HorizontalAlignment="Left" Click="UnpackAllBtn_Click"/>
-                <Button x:Name="UnpackSelectedBtn" Content="Unpack Selected" Width="105" HorizontalAlignment="Right" Click="UnpackSelectedBtn_Click"/>
+                <Button x:Name="UnpackAllBtn" Content="Unpack All" Width="105" HorizontalAlignment="Left" Click="UnpackAllBtn_Click" IsEnabled="False"/>
+                <Button x:Name="UnpackSelectedBtn" Content="Unpack Selected" Width="105" HorizontalAlignment="Right" Click="UnpackSelectedBtn_Click" IsEnabled="False"/>
             </Grid>
             <Separator Height="14" Margin="0,-13"/>
             <StackPanel Height="26" Orientation="Horizontal" Margin="10,0">
