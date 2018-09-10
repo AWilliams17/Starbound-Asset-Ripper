@@ -49,6 +49,15 @@ namespace ApplicationUtils
             return selectedPath;
         }
 
+        private static string FolderNameFromPath(string PakFilePath)
+        {
+            string pakName = PakFilePath.Substring(PakFilePath.LastIndexOf('\\'));
+            string pakFilePathTrimmed = PakFilePath.Replace(pakName, "");
+            string folderName = pakFilePathTrimmed.Substring(pakFilePathTrimmed.LastIndexOf('\\')).Replace("\\", "");
+
+            return folderName;
+        }
+
         public static List<string> UnpackPakFile(string SteamPath, string PakFilePath, string OutputPath)
         {
             List<string> returnValue = new List<string>();
@@ -56,6 +65,8 @@ namespace ApplicationUtils
             string operationError = null;
             string assetUnpackerExePath = $"{SteamPath}\\steamapps\\common\\Starbound\\win32\\asset_unpacker.exe";
             string outputPathOld = OutputPath; // For use in the result since I am going to be modifying this string.
+            string folderName = FolderNameFromPath(PakFilePath);
+
 
             PakFilePath = PakFilePath.Insert(PakFilePath.Length, "\"").Insert(0, "\"");
             OutputPath = OutputPath.Insert(OutputPath.Length, "\"").Insert(0, "\"");
@@ -73,6 +84,7 @@ namespace ApplicationUtils
                     CreateNoWindow = true,
                 }
             };
+
             proc.Start();
             StreamReader assetUnpackerOutput = proc.StandardOutput;
             StreamReader assetUnpackerError = proc.StandardError;
@@ -90,7 +102,7 @@ namespace ApplicationUtils
                 }
                 else
                 {
-                    operationResult = operationResult.Replace(outputPathOld, "output folder");
+                    operationResult = $"{folderName}: {operationResult.Replace(outputPathOld, "output folder")}";
                     returnValue.Add("Success");
                     returnValue.Add(operationResult);
                 }
