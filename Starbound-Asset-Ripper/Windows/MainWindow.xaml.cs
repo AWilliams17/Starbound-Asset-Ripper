@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using Registrar;
 using Starbound_Asset_Ripper.ConfigContainer;
+using Web.Utils;
 
 
 namespace Starbound_Asset_Ripper
@@ -80,12 +81,16 @@ namespace Starbound_Asset_Ripper
 
         private void UnpackSelectedBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            // Test the Readme Parser
+            string parseResult = ReadmeParser.GetLineFromReadme("https://raw.githubusercontent.com/AWilliams17/DumboChat/master/README.md", "This", 5);
+            MessageBox.Show(parseResult);
         }
 
         private void UnpackAllBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            // Test the Latest Release Parser
+            string latestRelease = LatestReleaseParser.GetLatestRelease("AWilliams17", "Halo-CE-Mouse-Tool", 5);
+            MessageBox.Show(latestRelease);
         }
 
         private void MainWindow_Closing(object sender, EventArgs e)
