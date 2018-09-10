@@ -2,9 +2,9 @@
 using System.Net;
 using System.Web.Script.Serialization;
 
-namespace Web.Utils
+namespace WebUtils
 {
-    public static class WebUtils
+    public static class WebRequests
     {
         public static string DownloadString(string Url, int TimeOut)
         {

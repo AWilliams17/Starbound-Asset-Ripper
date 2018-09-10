@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Web.Utils
+namespace WebUtils
 {
     public static class ReadmeParser
     {
@@ -13,9 +13,9 @@ namespace Web.Utils
         {
             string result = null;
 
-            if (WebUtils.CanConnect(ReadmeURL, TimeOut))
+            if (WebRequests.CanConnect(ReadmeURL, TimeOut))
             {
-                string readmeText = WebUtils.DownloadString(ReadmeURL, TimeOut);
+                string readmeText = WebRequests.DownloadString(ReadmeURL, TimeOut);
 
                 using (StringReader sr = new StringReader(readmeText))
                 {

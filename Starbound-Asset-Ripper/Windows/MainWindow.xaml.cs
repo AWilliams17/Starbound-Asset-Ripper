@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,7 +19,8 @@ using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using Registrar;
 using Starbound_Asset_Ripper.ConfigContainer;
-using Web.Utils;
+using WebUtils;
+using ApplicationUtils;
 
 
 namespace Starbound_Asset_Ripper
@@ -66,17 +68,17 @@ namespace Starbound_Asset_Ripper
 
         private void GithubBtn_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://github.com/AWilliams17/Starbound-Asset-Ripper/");
+            WebUtilsRelated.OpenGithubPage();
         }
 
         private void RedditBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+            WebUtilsRelated.OpenRedditThread();
         }
 
         private void UpdateBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            WebUtilsRelated.HandleUpdateCheck();
         }
 
         private void UnpackSelectedBtn_Click(object sender, RoutedEventArgs e)
