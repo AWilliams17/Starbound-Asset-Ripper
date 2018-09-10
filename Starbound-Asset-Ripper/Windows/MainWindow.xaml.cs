@@ -156,6 +156,26 @@ namespace Starbound_Asset_Ripper
 
         private void UnpackAllBtn_Click(object sender, RoutedEventArgs e)
         {
+            /*
+             * At the start of the operation, make the label say "Unpacking all files to output folder..."
+             * I want the status label to do "Unpacked x/y files to output folder in z seconds" at the end of the operation.
+             * Have it update throughout the operation.
+             * 
+             * So, at the start of the operation, log the current time, and the item count in the list box.
+             * Then, foreach item in that list box:
+             *  Take the selectedvalue, do the unpackpakfile on it.
+             *  If it's a success:
+             *      add 1 to the processed file counter
+             *  If it's an error:
+             *      add 1 to the error file counter
+             *  If it's a critical error (the exe wasn't found):
+             *      stop operating, display error message, set label to "error"
+             * 
+             *  Now at the end of this, calculate the time elapsed, 
+             *  if there were errors, display a Message Box with the list of folder names which failed,
+             *  
+             *  Set Status Label to: "Unpacked x/y files to output folder in time elapsed"
+             */
 
         }
 
