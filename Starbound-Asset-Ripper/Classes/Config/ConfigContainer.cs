@@ -23,6 +23,5 @@ namespace Starbound_Asset_Ripper.ConfigContainer
         {
             RegisterSettings();
         }
-        
     }
 }

@@ -1,5 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Security.Principal;
+using System.Text;
 using System.Windows;
 
 namespace ApplicationUtils
@@ -43,6 +47,56 @@ namespace ApplicationUtils
             }
 
             return selectedPath;
+        }
+
+        public static List<string> UnpackPakFile(string SteamPath, string PakFilePath, string OutputPath)
+        {
+            List<string> returnValue = new List<string>();
+            string operationResult = null;
+            string operationError = null;
+            string assetUnpackerExePath = $"{SteamPath}\\steamapps\\common\\Starbound\\win32\\asset_unpacker.exe";
+            string outputPathOld = OutputPath; // For use in the result since I am going to be modifying this string.
+
+            PakFilePath = PakFilePath.Insert(PakFilePath.Length, "\"").Insert(0, "\"");
+            OutputPath = OutputPath.Insert(OutputPath.Length, "\"").Insert(0, "\"");
+
+            var proc = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = assetUnpackerExePath,
+                    UseShellExecute = false,
+                    Arguments = $"{PakFilePath} {OutputPath}",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                }
+            };
+            proc.Start();
+            StreamReader assetUnpackerOutput = proc.StandardOutput;
+            StreamReader assetUnpackerError = proc.StandardError;
+            proc.WaitForExit();
+            
+            if (proc.HasExited)
+            {
+                operationResult = assetUnpackerOutput.ReadToEnd();
+                operationError = assetUnpackerError.ReadToEnd();
+                if (operationResult == "")
+                {
+                    operationResult = operationError;
+                    returnValue.Add("Error");
+                    returnValue.Add(operationError);
+                }
+                else
+                {
+                    operationResult = operationResult.Replace(outputPathOld, "output folder");
+                    returnValue.Add("Success");
+                    returnValue.Add(operationResult);
+                }
+            }
+
+            return returnValue;
         }
     }
 }

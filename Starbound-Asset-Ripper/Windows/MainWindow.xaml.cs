@@ -123,7 +123,25 @@ namespace Starbound_Asset_Ripper
 
         private void UnpackSelectedBtn_Click(object sender, RoutedEventArgs e)
         {
+            if (PakListBox.SelectedItem != null)
+            {
+                string selectedValue = PakListBox.SelectedValue.ToString();
+                string selectedPakPath = pakDictionary[selectedValue];
+                string steamPath = config.settings.GetOption<string>("SteamPath");
+                string outputPath = config.settings.GetOption<string>("OutputPath");
 
+                List<string> unpackFileResult = MiscUtils.UnpackPakFile(steamPath, selectedPakPath, outputPath);
+                
+                if (unpackFileResult[0] == "Error")
+                {
+                    MessageBox.Show($"Error occurred while unpacking {selectedValue}:{Environment.NewLine}{unpackFileResult[1]}");
+                    SetStatusLabel($"Failed to unpack {selectedValue}", LabelColors.Bad);
+                }
+                else
+                {
+                    SetStatusLabel(unpackFileResult[1], LabelColors.Good);
+                }
+            }
         }
 
         private void UnpackAllBtn_Click(object sender, RoutedEventArgs e)
