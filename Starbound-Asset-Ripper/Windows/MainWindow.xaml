@@ -6,7 +6,7 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:Starbound_Asset_Ripper"
         mc:Ignorable="d"
-        Title="Starbound Asset Ripper" Height="313.421" Width="390.58" Background="#FF252525" TitleCharacterCasing="Normal">
+        Title="Starbound Asset Ripper" Height="313.421" Width="460.58" Background="#FF252525" TitleCharacterCasing="Normal">
     <DockPanel LastChildFill="False">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File" x:Name="menuFileDropdown">
@@ -19,16 +19,16 @@
                 <MenuItem x:Name="UpdateBtn" Header="Update" IsCheckable="true" Click="UpdateBtn_Click"/>
             </MenuItem>
         </Menu>
-        <StackPanel x:Name="doelenContentPanel" Orientation="Vertical" Width="385" Margin="0,5,0,0">
+        <StackPanel x:Name="doelenContentPanel" Orientation="Vertical" Width="452" Margin="0,5,0,0">
             <StackPanel Height="26" Orientation="Horizontal" Margin="10,0">
                 <Label Content="Steam Path:" Width="76"/>
-                <TextBox x:Name="SteamPathTextBox" TextWrapping="Wrap" Text="Path to Steam installation..." Width="243"/>
-                <Button x:Name="SteamPathBtn" Content="..." Width="46" Click="SteamPathBtn_Click" Height="26" VerticalAlignment="Top"/>
+                <TextBox x:Name="SteamPathTextBox" TextWrapping="Wrap" Text="Path to Steam installation..." Width="298"/>
+                <Button x:Name="SteamPathBtn" Content="..." Width="56" Click="SteamPathBtn_Click" Height="26" VerticalAlignment="Top"/>
             </StackPanel>
             <StackPanel Height="26" Orientation="Horizontal" Margin="10,10">
                 <Label Content="Output Path:" Width="76"/>
-                <TextBox x:Name="OutputPathTextBox" TextWrapping="Wrap" Text="Path to output folder..." Width="243"/>
-                <Button x:Name="OutputPathBtn" Content="..." Width="46" Click="OutputPathBtn_Click"/>
+                <TextBox x:Name="OutputPathTextBox" TextWrapping="Wrap" Text="Path to output folder..." Width="298"/>
+                <Button x:Name="OutputPathBtn" Content="..." Width="56" Click="OutputPathBtn_Click"/>
             </StackPanel>
             <ListView x:Name="PakListBox" Height="100" Margin="10,0" Background="#FF323030">
                 <ListView.View>

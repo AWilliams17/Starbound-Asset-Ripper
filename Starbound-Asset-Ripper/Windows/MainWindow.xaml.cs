@@ -43,7 +43,7 @@ namespace Starbound_Asset_Ripper
 
         private void OutputPathBtn_Click(object sender, RoutedEventArgs e)
         {
-            string outputPath = MiscUtils.SelectFolderDialog("");
+            string outputPath = FileUtils.SelectFolderDialog("");
             if (outputPath != null)
             {
                 config.settings.SetOption("OutputPath", outputPath);
@@ -55,10 +55,10 @@ namespace Starbound_Asset_Ripper
 
         private void SteamPathBtn_Click(object sender, RoutedEventArgs e)
         {
-            string steamPath = MiscUtils.SelectFolderDialog(@"Browse to the steam installation EG: C:\Program Files(x86)\Steam");
+            string steamPath = FileUtils.SelectFolderDialog(@"Browse to the steam installation EG: C:\Program Files(x86)\Steam");
             if (steamPath != null)
             {
-                string workshopPath = MiscUtils.GetWorkShopPath(steamPath);
+                string workshopPath = FileUtils.GetWorkShopPath(steamPath);
 
                 if (workshopPath == null)
                 {
@@ -130,11 +130,16 @@ namespace Starbound_Asset_Ripper
                 string steamPath = config.settings.GetOption<string>("SteamPath");
                 string outputPath = config.settings.GetOption<string>("OutputPath");
 
-                List<string> unpackFileResult = MiscUtils.UnpackPakFile(steamPath, selectedPakPath, outputPath);
+                string[] unpackFileResult = PakUtils.UnpackPakFile(steamPath, selectedPakPath, outputPath);
                 
                 if (unpackFileResult[0] == "Error")
                 {
                     MessageBox.Show($"Error occurred while unpacking {selectedValue}:{Environment.NewLine}{unpackFileResult[1]}");
+                    SetStatusLabel($"Failed to unpack {selectedValue}", LabelColors.Bad);
+                }
+                else if (unpackFileResult[0] == "Error_EXE")
+                {
+                    MessageBox.Show($"Critical Error occurred while unpacking {selectedValue}:{Environment.NewLine}{unpackFileResult[1]}");
                     SetStatusLabel($"Failed to unpack {selectedValue}", LabelColors.Bad);
                 }
                 else

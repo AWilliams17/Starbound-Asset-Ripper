@@ -104,8 +104,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classes\ApplicationUtils\FileUtils.cs" />
     <Compile Include="Classes\ApplicationUtils\LabelColors.cs" />
     <Compile Include="Classes\ApplicationUtils\MiscUtils.cs" />
+    <Compile Include="Classes\ApplicationUtils\PakUtils.cs" />
     <Compile Include="Classes\ApplicationUtils\WebUtilsRelated.cs" />
     <Compile Include="Classes\WebUtils\ReadmeParser.cs" />
     <Compile Include="Classes\WebUtils\LatestReleaseParser.cs" />
