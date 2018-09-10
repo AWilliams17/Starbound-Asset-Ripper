@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using Starbound_Asset_Ripper.ConfigContainer;
 using ApplicationUtils;
-using System.Collections.Generic;
 
 // TODO: Need to add threading around the web utils function calls
 namespace Starbound_Asset_Ripper
@@ -105,17 +106,19 @@ namespace Starbound_Asset_Ripper
         
         private void LoadPaks()
         {
-            // Get workshop directory path
-            // Get starbound asset unpacker path (and if it doesn't exist scream about it)
-            // Now go into the workshop directory, and
-            /*
-             * For each folder in there,
-             *  If the folder has a .pak file, create a string ".pak in folder: {folder name}", take the .pak file path,
-             *      Now store the ".pak in folder" string as a key in the pakList dictionary, with the value being the pak file path.
-             *  Otherwise, keep going through all the folders.
-             * Now, after this is done, 
-             *  
-            */
+            string workshopPath = config.settings.GetOption<string>("WorkshopPath");
+            foreach (string folder in Directory.EnumerateDirectories(workshopPath))
+            {
+                string folderName = folder.Substring(folder.LastIndexOf(@"\")).TrimStart('\\');
+                foreach (string file in Directory.EnumerateFiles(folder))
+                {
+                    if (file.EndsWith(".pak"))
+                    {
+                        string pakDictKey = $".pak in folder: {folderName}";
+                        pakDictionary.Add(pakDictKey, file);
+                    }
+                }
+            }
         }
 
         private void UnpackSelectedBtn_Click(object sender, RoutedEventArgs e)
@@ -130,8 +133,7 @@ namespace Starbound_Asset_Ripper
 
         private void RefreshPakListBtn_Click(Object sender, RoutedEventArgs e)
         {
-            pakDictionary.Clear();
-            LoadPaks();
+            UpdatePakList();
         }
 
         private void MainWindow_Closing(object sender, EventArgs e)
@@ -164,7 +166,6 @@ namespace Starbound_Asset_Ripper
             {
                 SetStatusLabel("Waiting for paths to be set...", LabelColors.Bad);
             }
-
         }
 
         private void UpdateTextBoxes()
@@ -182,13 +183,23 @@ namespace Starbound_Asset_Ripper
             }
         }
 
+        private void UpdatePakList()
+        {
+            pakDictionary.Clear();
+            LoadPaks();
+            foreach (KeyValuePair<string, string> kvp in pakDictionary)
+            {
+                PakListBox.Items.Add(kvp.Key);
+            }
+        }
+
         private void UpdateAllControls()
         {
             UpdateTextBoxes();
             UpdateLabels();
             if (steamPathSet && workshopPathSet && outputPathSet)
             {
-                LoadPaks();
+                UpdatePakList();
             }
         }
     }

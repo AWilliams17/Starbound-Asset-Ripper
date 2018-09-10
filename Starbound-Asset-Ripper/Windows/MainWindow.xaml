@@ -30,7 +30,7 @@
                 <TextBox x:Name="OutputPathTextBox" TextWrapping="Wrap" Text="Path to output folder..." Width="243"/>
                 <Button x:Name="OutputPathBtn" Content="..." Width="46" Click="OutputPathBtn_Click"/>
             </StackPanel>
-            <ListView x:Name="PakListBox" Height="100" Margin="10,0" Background="#FF2C2A2A">
+            <ListView x:Name="PakListBox" Height="100" Margin="10,0" Background="#FF323030">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn/>
