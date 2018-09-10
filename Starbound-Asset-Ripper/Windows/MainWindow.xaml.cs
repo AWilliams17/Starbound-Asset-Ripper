@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Media;
 using Starbound_Asset_Ripper.ConfigContainer;
 using ApplicationUtils;
+using System.Security.Principal;
 
 // TODO: Need to add threading around the web utils function calls
 namespace Starbound_Asset_Ripper
@@ -25,8 +26,12 @@ namespace Starbound_Asset_Ripper
             InitializeComponent();
             ResizeMode = 0;
             Closing += MainWindow_Closing;
-            MiscUtils.WarnIfNotAdmin();
-            
+
+            if ((new WindowsPrincipal(WindowsIdentity.GetCurrent())).IsInRole(WindowsBuiltInRole.Administrator))
+            {
+                MessageBox.Show("Warning - You are not running as an administrator. It is highly recommended you do so.", "Not Administrator Warning");
+            }
+
             string loadSettingsResult = config.settings.LoadSettings();
             if (loadSettingsResult != null || !config.settings.RootKeyExists())
             {
