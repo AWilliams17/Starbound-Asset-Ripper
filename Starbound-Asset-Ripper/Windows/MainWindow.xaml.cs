@@ -6,6 +6,9 @@ using System.Windows.Media;
 using Starbound_Asset_Ripper.ConfigContainer;
 using ApplicationUtils;
 using System.Security.Principal;
+using System.Threading;
+using System.ComponentModel;
+using System.Threading.Tasks;
 
 // TODO: Need to add threading around the web utils function calls
 namespace Starbound_Asset_Ripper
@@ -19,6 +22,8 @@ namespace Starbound_Asset_Ripper
         private bool outputPathSet = false;
         private bool workshopPathSet = false;
         private Dictionary<string, string> pakDictionary = new Dictionary<string, string>();
+        private readonly BackgroundWorker unpackerWorker = new BackgroundWorker();
+        private readonly BackgroundWorker updateWorker = new BackgroundWorker();
         public static Config config = new Config();
 
         public MainWindow()
@@ -126,7 +131,7 @@ namespace Starbound_Asset_Ripper
             }
         }
 
-        private void UnpackSelectedBtn_Click(object sender, RoutedEventArgs e)
+        private async void UnpackSelectedBtn_Click(object sender, RoutedEventArgs e)
         {
             if (PakListBox.SelectedItem != null)
             {
@@ -135,8 +140,13 @@ namespace Starbound_Asset_Ripper
                 string steamPath = config.settings.GetOption<string>("SteamPath");
                 string outputPath = config.settings.GetOption<string>("OutputPath");
 
-                string[] unpackFileResult = PakUtils.UnpackPakFile(steamPath, selectedPakPath, outputPath);
-                
+                SetStatusLabel($"Unpacking {selectedValue}... This might take a moment.", LabelColors.Good);
+
+                string[] unpackFileResult = await Task.Run(() =>
+                {
+                    return PakUtils.UnpackPakFile(steamPath, selectedPakPath, outputPath);
+                });
+
                 if (unpackFileResult[0] == "Error")
                 {
                     MessageBox.Show($"Error occurred while unpacking {selectedValue}:{Environment.NewLine}{unpackFileResult[1]}");
@@ -145,7 +155,7 @@ namespace Starbound_Asset_Ripper
                 else if (unpackFileResult[0] == "Error_EXE")
                 {
                     MessageBox.Show($"Critical Error occurred while unpacking {selectedValue}:{Environment.NewLine}{unpackFileResult[1]}");
-                    SetStatusLabel($"Failed to unpack {selectedValue}", LabelColors.Bad);
+                    SetStatusLabel($"Failed to unpack: asset_unpacker.exe is missing.", LabelColors.Bad);
                 }
                 else
                 {
@@ -154,29 +164,37 @@ namespace Starbound_Asset_Ripper
             }
         }
 
-        private void UnpackAllBtn_Click(object sender, RoutedEventArgs e)
+        private async void UnpackAllBtn_Click(object sender, RoutedEventArgs e)
         {
-            /*
-             * At the start of the operation, make the label say "Unpacking all files to output folder..."
-             * I want the status label to do "Unpacked x/y files to output folder in z seconds" at the end of the operation.
-             * Have it update throughout the operation.
-             * 
-             * So, at the start of the operation, log the current time, and the item count in the list box.
-             * Then, foreach item in that list box:
-             *  Take the selectedvalue, do the unpackpakfile on it.
-             *  If it's a success:
-             *      add 1 to the processed file counter
-             *  If it's an error:
-             *      add 1 to the error file counter
-             *  If it's a critical error (the exe wasn't found):
-             *      stop operating, display error message, set label to "error"
-             * 
-             *  Now at the end of this, calculate the time elapsed, 
-             *  if there were errors, display a Message Box with the list of folder names which failed,
-             *  
-             *  Set Status Label to: "Unpacked x/y files to output folder in time elapsed"
-             */
+            SetStatusLabel($"Unpacking all pak files... This might take a moment.", LabelColors.Good);
 
+            DateTime operationStartTime = DateTime.Now;
+            string steamPath = config.settings.GetOption<string>("SteamPath");
+            string outputPath = config.settings.GetOption<string>("OutputPath");
+            int itemsToProcess = PakListBox.Items.Count;
+            
+            string[][] unpackAllResult = await Task.Run(() =>
+            {
+                return PakUtils.UnpackMultiplePaks(steamPath, outputPath, PakListBox, pakDictionary);
+            });
+            
+            string[] processedItems = unpackAllResult[0];
+            string[] failedItems = unpackAllResult[1];
+            string[] exeMissingError = unpackAllResult[2];
+            if (exeMissingError[1] != "")
+            {
+                MessageBox.Show(exeMissingError[1]);
+                SetStatusLabel($"Failed to unpack: asset_unpacker.exe missing", LabelColors.Bad);
+            }
+            else
+            {
+                if (failedItems[0] != null)
+                {
+                    MessageBox.Show($"Some files failed to unpack: {Environment.NewLine}{failedItems}");
+                }
+                TimeSpan timeElapsed = DateTime.Now.Subtract(operationStartTime);
+                SetStatusLabel($"Unpacked {processedItems.Length}/{itemsToProcess} items in {Math.Round(timeElapsed.TotalSeconds, 4)} seconds", LabelColors.Good);
+            }
         }
 
         private void RefreshPakListBtn_Click(Object sender, RoutedEventArgs e)

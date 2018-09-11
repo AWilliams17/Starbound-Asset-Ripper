@@ -106,7 +106,6 @@
     </Compile>
     <Compile Include="Classes\ApplicationUtils\FileUtils.cs" />
     <Compile Include="Classes\ApplicationUtils\LabelColors.cs" />
-    <Compile Include="Classes\ApplicationUtils\MiscUtils.cs" />
     <Compile Include="Classes\ApplicationUtils\PakUtils.cs" />
     <Compile Include="Classes\ApplicationUtils\WebUtilsRelated.cs" />
     <Compile Include="Classes\WebUtils\ReadmeParser.cs" />
