@@ -6,7 +6,6 @@ using System.Windows.Media;
 using Starbound_Asset_Ripper.ConfigContainer;
 using ApplicationUtils;
 using System.Security.Principal;
-using System.Threading;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
@@ -48,7 +47,7 @@ namespace Starbound_Asset_Ripper
             workshopPathSet = (config.settings.GetOption<string>("WorkshopPath") != "");
             outputPathSet = (config.settings.GetOption<string>("OutputPath") != "");
 
-            UpdateAllControls();
+            UpdateAllControls(true, true);
         }
 
         private void OutputPathBtn_Click(object sender, RoutedEventArgs e)
@@ -59,7 +58,7 @@ namespace Starbound_Asset_Ripper
                 config.settings.SetOption("OutputPath", outputPath);
                 config.settings.SaveSettings();
                 outputPathSet = true;
-                UpdateAllControls();
+                UpdateAllControls(true, true);
             }
         }
 
@@ -85,7 +84,7 @@ namespace Starbound_Asset_Ripper
                 config.settings.SetOption("SteamPath", steamPath);
                 config.settings.SaveSettings();
                 steamPathSet = true;
-                UpdateAllControls();
+                UpdateAllControls(true, true);
             }
         }
 
@@ -109,28 +108,17 @@ namespace Starbound_Asset_Ripper
             WebUtilsRelated.OpenRedditThread();
         }
 
-        private void UpdateBtn_Click(object sender, RoutedEventArgs e)
+        private async void UpdateBtn_Click(object sender, RoutedEventArgs e)
         {
-            WebUtilsRelated.HandleUpdateCheck();
+            UpdateBtn.IsEnabled = false;
+            await Task.Run(() =>
+            {
+                WebUtilsRelated.HandleUpdateCheck();
+            });
+            UpdateBtn.IsEnabled = true;
+
         }
         
-        private void LoadPaks()
-        {
-            string workshopPath = config.settings.GetOption<string>("WorkshopPath");
-            foreach (string folder in Directory.EnumerateDirectories(workshopPath))
-            {
-                string folderName = folder.Substring(folder.LastIndexOf(@"\")).TrimStart('\\');
-                foreach (string file in Directory.EnumerateFiles(folder))
-                {
-                    if (file.EndsWith(".pak"))
-                    {
-                        string pakDictKey = $".pak in folder: {folderName}";
-                        pakDictionary.Add(pakDictKey, file);
-                    }
-                }
-            }
-        }
-
         private async void UnpackSelectedBtn_Click(object sender, RoutedEventArgs e)
         {
             if (PakListBox.SelectedItem != null)
@@ -141,6 +129,8 @@ namespace Starbound_Asset_Ripper
                 string outputPath = config.settings.GetOption<string>("OutputPath");
 
                 SetStatusLabel($"Unpacking {selectedValue}... This might take a moment.", LabelColors.Good);
+
+                UpdateAllControls(AffectButtons: true, AffectLabels: false);
 
                 string[] unpackFileResult = await Task.Run(() =>
                 {
@@ -161,12 +151,16 @@ namespace Starbound_Asset_Ripper
                 {
                     SetStatusLabel(unpackFileResult[1], LabelColors.Good);
                 }
+
+                UpdateAllControls(AffectButtons: true, AffectLabels: false);
             }
         }
 
         private async void UnpackAllBtn_Click(object sender, RoutedEventArgs e)
         {
             SetStatusLabel($"Unpacking all pak files... This might take a moment.", LabelColors.Good);
+
+            UpdateAllControls(AffectButtons: true, AffectLabels: false);
 
             DateTime operationStartTime = DateTime.Now;
             string steamPath = config.settings.GetOption<string>("SteamPath");
@@ -195,11 +189,15 @@ namespace Starbound_Asset_Ripper
                 TimeSpan timeElapsed = DateTime.Now.Subtract(operationStartTime);
                 SetStatusLabel($"Unpacked {processedItems.Length}/{itemsToProcess} items in {Math.Round(timeElapsed.TotalSeconds, 4)} seconds", LabelColors.Good);
             }
+
+            UpdateAllControls(AffectButtons: true, AffectLabels: false);
         }
 
         private void RefreshPakListBtn_Click(Object sender, RoutedEventArgs e)
         {
+            UpdateAllControls(true, true, false);
             UpdatePakList();
+            UpdateAllControls(true, true, false);
         }
 
         private void MainWindow_Closing(object sender, EventArgs e)
@@ -223,8 +221,6 @@ namespace Starbound_Asset_Ripper
                 }
                 else
                 {
-                    UnpackAllBtn.IsEnabled = true;
-                    UnpackSelectedBtn.IsEnabled = true;
                     SetStatusLabel("Everything looks good.", LabelColors.Good);
                 }
             }
@@ -232,6 +228,15 @@ namespace Starbound_Asset_Ripper
             {
                 SetStatusLabel("Waiting for paths to be set...", LabelColors.Bad);
             }
+        }
+
+        private void UpdateButtons()
+        {
+            SteamPathBtn.IsEnabled = !SteamPathBtn.IsEnabled;
+            OutputPathBtn.IsEnabled = !OutputPathBtn.IsEnabled;
+            UnpackAllBtn.IsEnabled = !UnpackAllBtn.IsEnabled;
+            UnpackSelectedBtn.IsEnabled = !UnpackSelectedBtn.IsEnabled;
+            RefreshPakListBtn.IsEnabled = !RefreshPakListBtn.IsEnabled;
         }
 
         private void UpdateTextBoxes()
@@ -252,20 +257,37 @@ namespace Starbound_Asset_Ripper
         private void UpdatePakList()
         {
             pakDictionary.Clear();
-            LoadPaks();
-            foreach (KeyValuePair<string, string> kvp in pakDictionary)
+            PakListBox.Items.Clear();
+            string workshopPath = config.settings.GetOption<string>("WorkshopPath");
+            foreach (string folder in Directory.EnumerateDirectories(workshopPath))
             {
-                PakListBox.Items.Add(kvp.Key);
+                string folderName = folder.Substring(folder.LastIndexOf(@"\")).TrimStart('\\');
+                foreach (string file in Directory.EnumerateFiles(folder))
+                {
+                    if (file.EndsWith(".pak"))
+                    {
+                        string pakDictKey = $".pak in folder: {folderName}";
+                        pakDictionary.Add(pakDictKey, file);
+                        PakListBox.Items.Add(pakDictKey);
+                    }
+                }
             }
         }
 
-        private void UpdateAllControls()
+        private void UpdateAllControls(bool AffectButtons = false, bool AffectPakList = false, bool AffectLabels = true)
         {
             UpdateTextBoxes();
             UpdateLabels();
             if (steamPathSet && workshopPathSet && outputPathSet)
             {
-                UpdatePakList();
+                if (AffectPakList)
+                {
+                    UpdatePakList();
+                }
+                if (AffectButtons)
+                {
+                    UpdateButtons();
+                }
             }
         }
     }
