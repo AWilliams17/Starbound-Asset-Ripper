@@ -23,12 +23,12 @@
             <StackPanel Height="26" Orientation="Horizontal" Margin="10,0">
                 <Label Content="Steam Path:" Width="76"/>
                 <TextBox x:Name="SteamPathTextBox" TextWrapping="Wrap" Text="Path to Steam installation..." Width="298"/>
-                <Button x:Name="SteamPathBtn" Content="..." Width="56" Click="SteamPathBtn_Click" Height="26" VerticalAlignment="Top" IsEnabled="False"/>
+                <Button x:Name="SteamPathBtn" Content="..." Width="56" Click="SteamPathBtn_Click" Height="26" VerticalAlignment="Top"/>
             </StackPanel>
             <StackPanel Height="26" Orientation="Horizontal" Margin="10,10">
                 <Label Content="Output Path:" Width="76"/>
                 <TextBox x:Name="OutputPathTextBox" TextWrapping="Wrap" Text="Path to output folder..." Width="298"/>
-                <Button x:Name="OutputPathBtn" Content="..." Width="56" Click="OutputPathBtn_Click" IsEnabled="False"/>
+                <Button x:Name="OutputPathBtn" Content="..." Width="56" Click="OutputPathBtn_Click"/>
             </StackPanel>
             <ListBox x:Name="PakListBox" Height="100" Margin="10,0" BorderBrush="#FF474747" BorderThickness="2"/>
             <Grid Height="26" Margin="10,10">
