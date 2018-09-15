@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace WebUtils
 {
@@ -39,7 +40,7 @@ namespace WebUtils
             }
             else
             {
-                result = "Connection Failed.";
+                throw new WebException("Failed to connect to the Github API.");
             }
 
             return result;

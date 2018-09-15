@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Web.Script.Serialization;
 
@@ -55,9 +56,13 @@ namespace WebUtils
                     return (statusCode >= 200 && statusCode <= 299);
                 }
             }
-            catch (WebException)
+            catch (WebException ex)
             {
-                return false;
+                if (ex.Status == WebExceptionStatus.Timeout)
+                {
+                    throw;
+                }
+                else return false;
             }
         }
     }

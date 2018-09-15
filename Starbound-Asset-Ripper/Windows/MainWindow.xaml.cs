@@ -8,6 +8,7 @@ using ApplicationUtils;
 using System.Security.Principal;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Starbound_Asset_Ripper.Windows;
 
 // TODO: Need to add threading around the web utils function calls
 namespace Starbound_Asset_Ripper
@@ -17,13 +18,17 @@ namespace Starbound_Asset_Ripper
     /// </summary>
     public partial class MainWindow
     {
+        // Paths
         private bool steamPathSet = false;
         private bool outputPathSet = false;
         private bool workshopPathSet = false;
+
+        // Misc
         private Dictionary<string, string> pakDictionary = new Dictionary<string, string>();
-        private readonly BackgroundWorker unpackerWorker = new BackgroundWorker();
-        private readonly BackgroundWorker updateWorker = new BackgroundWorker();
         public static Config config = new Config();
+
+        // Windows
+        private static UpdateWindow updateWindow;
 
         public MainWindow()
         {
@@ -39,7 +44,6 @@ namespace Starbound_Asset_Ripper
             string loadSettingsResult = config.settings.LoadSettings();
             if (loadSettingsResult != null || !config.settings.RootKeyExists())
             {
-                // TODO: Should be a message box here.
                 MessageBox.Show(loadSettingsResult);
                 config.settings.SaveSettings();
             }
@@ -108,15 +112,23 @@ namespace Starbound_Asset_Ripper
             WebUtilsRelated.OpenRedditThread();
         }
 
-        private async void UpdateBtn_Click(object sender, RoutedEventArgs e)
+        private void UpdateBtn_Click(object sender, RoutedEventArgs e)
         {
-            UpdateBtn.IsEnabled = false;
-            await Task.Run(() =>
-            {
-                WebUtilsRelated.HandleUpdateCheck();
-            });
-            UpdateBtn.IsEnabled = true;
+            bool windowOpen = false;
 
+            foreach (Window window in Application.Current.Windows)
+            {
+                if (window.GetType() == typeof(UpdateWindow))
+                {
+                    windowOpen = true;
+                }
+            }
+
+            if (!windowOpen)
+            {
+                updateWindow = new UpdateWindow();
+                updateWindow.Show();
+            }
         }
         
         private async void UnpackSelectedBtn_Click(object sender, RoutedEventArgs e)
