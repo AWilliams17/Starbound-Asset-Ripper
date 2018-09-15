@@ -9,9 +9,13 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Starbound_Asset_Ripper.Windows;
 
-// TODO: Need to add threading around the web utils function calls
 namespace Starbound_Asset_Ripper
 {
+    /*
+     *  -PLANNING-
+     * 
+     * 
+    */
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -54,7 +58,7 @@ namespace Starbound_Asset_Ripper
 
         private void HelpBtn_Click(object sender, RoutedEventArgs e)
         {
-            WebUtilsRelated.OpenGithubPage();
+            WebUtilsRelated.OpenGithubPage();  // TODO: Don't do this
         }
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
@@ -69,6 +73,7 @@ namespace Starbound_Asset_Ripper
 
         private void RedditBtn_Click(object sender, RoutedEventArgs e)
         {
+            // TRY-CATCH
             WebUtilsRelated.OpenRedditThread();
         }
 

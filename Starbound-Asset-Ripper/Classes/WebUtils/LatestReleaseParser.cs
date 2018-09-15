@@ -32,18 +32,17 @@ namespace WebUtils
                 {
                     Dictionary<string, object> parsedJson = WebRequests.ParseJson(fullURL, TimeOut);
                     result = parsedJson["tag_name"].ToString();
+                    // RETURN HERE
                 }
                 else
                 {
-                    result = "Failed to find release.";
+                    // THROW EXCEPTION
                 }
             }
             else
             {
                 throw new WebException("Failed to connect to the Github API.");
             }
-
-            return result;
         }
     }
 }

@@ -9,6 +9,7 @@ namespace ApplicationUtils
     {
         public static bool UpdateAvailable()
         {
+            // TRY-CATCH HERE
             string current_version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             string latestRelase = LatestReleaseParser.GetLatestRelease("AWilliams17", "Starbound-Asset-Ripper", 5);
             if (current_version != latestRelase)

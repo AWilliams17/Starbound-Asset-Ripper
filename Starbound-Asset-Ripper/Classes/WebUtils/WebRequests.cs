@@ -16,9 +16,10 @@ namespace WebUtils
             if (CanConnect(Url, TimeOut))
             {
                 downloadResult = webClient.DownloadString(Url);
+                // RETURN HERE
             }
 
-            return downloadResult;
+            // THROW CAN NOT CONNECT
         }
 
         public static Dictionary<string, object> ParseJson(string JsonUrl, int TimeOut)
@@ -35,7 +36,7 @@ namespace WebUtils
             }
             else
             {
-                jsonDictionary = null;
+                // THROW CAN NOT CONNECT
             }
 
             return jsonDictionary;

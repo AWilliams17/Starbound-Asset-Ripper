@@ -6,6 +6,7 @@ namespace WebUtils
     {
         public static string GetLineFromReadme(string ReadmeURL, string LinePrefix, int TimeOut)
         {
+            // TRY/CATCH/THROW/ WHATEVER HERE
             string result = null;
 
             if (WebRequests.CanConnect(ReadmeURL, TimeOut))
@@ -25,12 +26,6 @@ namespace WebUtils
                     }
                 }
             }
-            else
-            {
-                result = "Connection Failed.";
-            }
-
-            return result;
         }
     }
 }
