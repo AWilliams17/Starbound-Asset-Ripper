@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace ApplicationUtils
 {
@@ -18,7 +13,7 @@ namespace ApplicationUtils
                 return workshopPath;
             }
 
-            return null;
+            throw new DirectoryNotFoundException("The workshop directory does not exist in the provided path.");
         }
 
         public static string SelectFolderDialog(string DialogDescription)

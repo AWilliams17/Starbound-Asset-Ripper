@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace ApplicationUtils
@@ -14,17 +13,16 @@ namespace ApplicationUtils
             return new string[] { Status, ResultMessage };
         }
 
-        public static string[] UnpackPakFile(string SteamPath, string PakFilePath, string OutputPath)
+        public static string UnpackPakFile(string SteamPath, string PakFilePath, string OutputPath)
         {
             string operationResult = null;
             string operationError = null;
-            string returnStatus = null;
             string assetUnpackerExePath = $"{SteamPath}\\steamapps\\common\\Starbound\\win32\\asset_unpacker.exe";
             string folderName = FileUtils.GetFolderNameFromFilePath(PakFilePath);
 
             if (!File.Exists(assetUnpackerExePath))
             {
-                return PakFileResult("Error_EXE", "Asset_Unpacker.exe not found in Starbound\\win32\\");
+                throw new FileNotFoundException("'asset_unpacker.exe' was not found in the Starbound folder.");
             }
 
             var proc = new Process
@@ -50,23 +48,13 @@ namespace ApplicationUtils
                 operationError = assetUnpackerError.ReadToEnd();
                 if (operationResult == "" && operationError != "")
                 {
-                    operationResult = operationError;
-                    returnStatus = "Error";
+                    throw new UnpackPakException(operationResult);
+                }
 
-                }
-                else if (operationResult != "")
-                {
-                    operationResult = $"{folderName}: {operationResult.Replace(OutputPath, "output folder")}";
-                    returnStatus = "Success";
-                }
-                else
-                {
-                    operationResult = "Failed to parse: Unknown error occurred.";
-                    returnStatus = "Error";
-                }
+                operationResult = $"{folderName}: {operationResult.Replace(OutputPath, "output folder")}";
             }
             
-            return PakFileResult(returnStatus, operationResult); ;
+            return operationResult;
         }
 
         public static string[][] UnpackMultiplePaks(string SteamPath, string OutputPath, ListBox PakListBox, Dictionary<string, string> PakDictionary)
@@ -75,32 +63,37 @@ namespace ApplicationUtils
             int itemsToProcess = PakListBox.Items.Count;
             string[] failedItems = new string[itemsToProcess];
             string[] processedItems = new string[itemsToProcess];
-            string[] exeMissingErrorMessage = new string[] { "EXE_Missing", "" };
             
             foreach (string currentPakFile in PakListBox.Items)
             {
                 int itemsRemaining = itemsToProcess - currItemIndex;
                 string currentPakPath = PakDictionary[currentPakFile];
+                string unpackFileResult = null;
 
-                string[] unpackFileResult = UnpackPakFile(SteamPath, currentPakPath, OutputPath);
-
-                if (unpackFileResult[0] == "Success")
+                try
                 {
+                    unpackFileResult = UnpackPakFile(SteamPath, currentPakPath, OutputPath);
                     processedItems[currItemIndex] = currentPakFile;
                 }
-                else if (unpackFileResult[1] == "Error")
+                catch (UnpackPakException ex)
                 {
-                    failedItems[currItemIndex] = $"Failed to process {currentPakFile}: {unpackFileResult[1]}{Environment.NewLine}";
-                }
-                else
-                {
-                    exeMissingErrorMessage[1] = unpackFileResult[1];
-                    break;
+                    failedItems[currItemIndex] = $"Failed to process {currentPakFile}: {ex.Message}{Environment.NewLine}";
                 }
                 currItemIndex += 1;
             }
-            return new string[][] { processedItems, failedItems, exeMissingErrorMessage };
+
+            return new string[][] { processedItems, failedItems };
 
         }
+    }
+    
+    public class UnpackPakException : Exception
+    {
+        public UnpackPakException() { }
+        public UnpackPakException(string message) : base(message) { }
+        public UnpackPakException(string message, Exception inner) : base(message, inner) { }
+        protected UnpackPakException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

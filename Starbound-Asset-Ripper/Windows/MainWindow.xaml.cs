@@ -140,30 +140,46 @@ namespace Starbound_Asset_Ripper
                 string steamPath = config.settings.GetOption<string>("SteamPath");
                 string outputPath = config.settings.GetOption<string>("OutputPath");
 
+                // For errors
+                string unpackError = null;
+                string exeMissingError = null;
+
                 SetStatusLabel($"Unpacking {selectedValue}... This might take a moment.", LabelColors.Good);
 
                 UpdateAllControls(AffectButtons: true, AffectLabels: false);
 
-                string[] unpackFileResult = await Task.Run(() =>
+                string unpackFileResult = await Task.Run(() =>
                 {
-                    return PakUtils.UnpackPakFile(steamPath, selectedPakPath, outputPath);
+                    try
+                    {
+                        return PakUtils.UnpackPakFile(steamPath, selectedPakPath, outputPath);
+                    }
+                    catch (UnpackPakException ex)
+                    {
+                        unpackError = ex.Message;
+                    }
+                    catch (FileNotFoundException ex)
+                    {
+                        exeMissingError = ex.Message;
+                    }
+                    return null;
                 });
-
-                if (unpackFileResult[0] == "Error")
+                
+                if (unpackError != null)
                 {
                     MessageBox.Show($"Error occurred while unpacking {selectedValue}:{Environment.NewLine}{unpackFileResult[1]}");
                     SetStatusLabel($"Failed to unpack {selectedValue}", LabelColors.Bad);
                 }
-                else if (unpackFileResult[0] == "Error_EXE")
+                else if (exeMissingError != null)
                 {
-                    MessageBox.Show($"Critical Error occurred while unpacking {selectedValue}:{Environment.NewLine}{unpackFileResult[1]}");
+                    MessageBox.Show($"Failed to unpack: asset_unpacker.exe was not found in the Starbound folder.");
                     SetStatusLabel($"Failed to unpack: asset_unpacker.exe is missing.", LabelColors.Bad);
                 }
                 else
                 {
-                    SetStatusLabel(unpackFileResult[1], LabelColors.Good);
+                    SetStatusLabel(unpackFileResult, LabelColors.Good);
                 }
-
+                
                 UpdateAllControls(AffectButtons: true, AffectLabels: false);
             }
         }
@@ -177,19 +193,27 @@ namespace Starbound_Asset_Ripper
             DateTime operationStartTime = DateTime.Now;
             string steamPath = config.settings.GetOption<string>("SteamPath");
             string outputPath = config.settings.GetOption<string>("OutputPath");
+            string exeMissingError = null;
             int itemsToProcess = PakListBox.Items.Count;
             
             string[][] unpackAllResult = await Task.Run(() =>
             {
-                return PakUtils.UnpackMultiplePaks(steamPath, outputPath, PakListBox, pakDictionary);
+                try
+                {
+                    return PakUtils.UnpackMultiplePaks(steamPath, outputPath, PakListBox, pakDictionary);
+                }
+                catch (FileNotFoundException ex)
+                {
+                    exeMissingError = ex.Message;
+                }
+                return null;
             });
             
             string[] processedItems = unpackAllResult[0];
             string[] failedItems = unpackAllResult[1];
-            string[] exeMissingError = unpackAllResult[2];
-            if (exeMissingError[1] != "")
+            if (exeMissingError != null)
             {
-                MessageBox.Show(exeMissingError[1]);
+                MessageBox.Show(exeMissingError);
                 SetStatusLabel($"Failed to unpack: asset_unpacker.exe missing", LabelColors.Bad);
             }
             else
@@ -289,7 +313,6 @@ namespace Starbound_Asset_Ripper
         private void UpdateAllControls(bool AffectButtons = false, bool AffectPakList = false, bool AffectLabels = true)
         {
             UpdateTextBoxes();
-            UpdateLabels();
             if (steamPathSet && workshopPathSet && outputPathSet)
             {
                 if (AffectPakList)
@@ -299,6 +322,10 @@ namespace Starbound_Asset_Ripper
                 if (AffectButtons)
                 {
                     UpdateButtons();
+                }
+                if (AffectLabels)
+                {
+                    UpdateLabels();
                 }
             }
         }
