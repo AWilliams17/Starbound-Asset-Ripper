@@ -38,6 +38,7 @@ namespace WebUtils
                 {
                     // THROW EXCEPTION
                 }
+                return "";
             }
             else
             {

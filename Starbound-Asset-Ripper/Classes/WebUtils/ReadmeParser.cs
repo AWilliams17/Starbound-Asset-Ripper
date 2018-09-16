@@ -26,6 +26,7 @@ namespace WebUtils
                     }
                 }
             }
+            return "";
         }
     }
 }

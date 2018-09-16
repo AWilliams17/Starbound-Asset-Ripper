@@ -20,6 +20,7 @@ namespace WebUtils
             }
 
             // THROW CAN NOT CONNECT
+            return "";
         }
 
         public static Dictionary<string, object> ParseJson(string JsonUrl, int TimeOut)

@@ -8,6 +8,13 @@ using ApplicationUtils;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Starbound_Asset_Ripper.Windows;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Collections.ObjectModel;
+using System.Windows.Data;
+using System.Collections.Concurrent;
+using System.Windows.Controls;
 
 namespace Starbound_Asset_Ripper
 {
@@ -27,28 +34,46 @@ namespace Starbound_Asset_Ripper
         private bool workshopPathSet = false;
 
         // Misc
-        private Dictionary<string, string> pakDictionary = new Dictionary<string, string>();
-        public static Config config = new Config();
+        static ObservableConcurrentDictionary<string, string> pakDictionary = new ObservableConcurrentDictionary<string, string>();
+        static Config config = new Config();
+        static string currentStatus = String.Empty;
 
         // Windows
         private static UpdateWindow updateWindow;
 
         public MainWindow()
         {
+            DataContext = this;
             InitializeComponent();
             ResizeMode = 0;
             Closing += MainWindow_Closing;
 
-            if (!(new WindowsPrincipal(WindowsIdentity.GetCurrent())).IsInRole(WindowsBuiltInRole.Administrator))
-            {
-                MessageBox.Show("Warning - You are not running as an administrator. It is highly recommended you do so.", "Not Administrator Warning");
-            }
+            //if (!(new WindowsPrincipal(WindowsIdentity.GetCurrent())).IsInRole(WindowsBuiltInRole.Administrator))
+            //{
+            //    MessageBox.Show("Warning - You are not running as an administrator. It is highly recommended you do so.", "Not Administrator Warning");
+            //}
+        }
 
+        public ObservableConcurrentDictionary<string, string> PakListBoxItems
+        {
+            get { return pakDictionary; }
+        }
+
+        private void PakListBox_ItemSelected(object sender, SelectionChangedEventArgs e)
+        {
+            if (PakListBox.SelectedItems.Count > 0)
+            {
+                UnpackSelectedBtn.IsEnabled = true;
+            }
+            else
+            {
+                UnpackSelectedBtn.IsEnabled = false;
+            }
         }
 
         private void OutputPathBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            pakDictionary.Add("Test", "Testt");
         }
 
         private void SteamPathBtn_Click(object sender, RoutedEventArgs e)
@@ -118,8 +143,8 @@ namespace Starbound_Asset_Ripper
 
         private void SetStatusLabel(string LabelText, Brush StatusColor)
         {
-            StatusLabel.Content = LabelText;
-            StatusLabel.Foreground = StatusColor;
+            //StatusLabel.Content = LabelText;
+            //StatusLabel.Foreground = StatusColor;
         }
 
         private void UpdateLabels()

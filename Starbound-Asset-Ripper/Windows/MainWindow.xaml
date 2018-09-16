@@ -30,17 +30,29 @@
                 <TextBox x:Name="OutputPathTextBox" TextWrapping="Wrap" Text="Path to output folder..." Width="298"/>
                 <Button x:Name="OutputPathBtn" Content="..." Width="56" Click="OutputPathBtn_Click"/>
             </StackPanel>
-            <ListBox x:Name="PakListBox" Height="100" Margin="10,0" BorderBrush="#FF474747" BorderThickness="2"/>
+            <ListBox x:Name="PakListBox" Height="100" Margin="10,0" BorderBrush="#FF474747" BorderThickness="2" ItemsSource="{Binding PakListBoxItems, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="PakListBox_ItemSelected">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Key}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
             <Grid Height="26" Margin="10,10">
-                <Button x:Name="UnpackAllBtn" Content="Unpack All" Width="105" HorizontalAlignment="Left" Click="UnpackAllBtn_Click" IsEnabled="False"/>
+                <Button x:Name="UnpackAllBtn" Content="Unpack All" Width="105" HorizontalAlignment="Left" Click="UnpackAllBtn_Click" IsEnabled="{Binding ElementName=PakListBox, Path=HasItems}"/>
                 <Button x:Name="UnpackSelectedBtn" Content="Unpack Selected" Width="105" HorizontalAlignment="Right" Click="UnpackSelectedBtn_Click" IsEnabled="False"/>
-                <Button x:Name="RefreshPakListBtn" Content="Refresh Pak List" HorizontalAlignment="Left" Margin="164,-1,0,0" Click="RefreshPakListBtn_Click" VerticalAlignment="Top" Width="105" IsEnabled="False"/>
+                <Button x:Name="RefreshPakListBtn" Content="Refresh Pak List" HorizontalAlignment="Left" Margin="164,-1,0,0" Click="RefreshPakListBtn_Click" VerticalAlignment="Top" Width="105" IsEnabled="{Binding ElementName=PakListBox, Path=HasItems}"/>
             </Grid>
             <Separator Height="14" Margin="0,-13"/>
-            <StackPanel Height="26" Orientation="Horizontal" Margin="10,0">
-                <Label Content="Status:"/>
-                <Label x:Name="StatusLabel" Content="'Status goes here'"/>
-            </StackPanel>
+            <StatusBar Height="28" Background="Transparent" Margin="10,0">
+                <StatusBarItem Grid.Column="2">
+                    <TextBlock Text="Status:" />
+                </StatusBarItem>
+                <StatusBarItem Grid.Column="2">
+                    <TextBlock Text="bind_this" />
+                </StatusBarItem>
+            </StatusBar>
         </StackPanel>
     </DockPanel>
 </Controls:MetroWindow>
