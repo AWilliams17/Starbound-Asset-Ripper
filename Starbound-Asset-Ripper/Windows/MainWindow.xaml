@@ -6,7 +6,7 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:Starbound_Asset_Ripper"
         mc:Ignorable="d"
-        Title="Starbound Asset Ripper" Height="313.421" Width="460.58" Background="#FF252525" TitleCharacterCasing="Normal">
+        Title="Starbound Asset Ripper" Height="282.421" Width="460.58" Background="#FF252525" TitleCharacterCasing="Normal">
     <DockPanel LastChildFill="False">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File" x:Name="menuFileDropdown">
@@ -22,15 +22,15 @@
         <StackPanel x:Name="doelenContentPanel" Orientation="Vertical" Width="452" Margin="0,5,0,0">
             <StackPanel Height="26" Orientation="Horizontal" Margin="10,0">
                 <Label Content="Steam Path:" Width="76"/>
-                <TextBox x:Name="SteamPathTextBox" TextWrapping="Wrap" Text="Path to Steam installation..." Width="298"/>
+                <TextBox x:Name="SteamPathTextBox" TextWrapping="Wrap" Width="298"/>
                 <Button x:Name="SteamPathBtn" Content="..." Width="56" Click="SteamPathBtn_Click" Height="26" VerticalAlignment="Top"/>
             </StackPanel>
             <StackPanel Height="26" Orientation="Horizontal" Margin="10,10">
                 <Label Content="Output Path:" Width="76"/>
-                <TextBox x:Name="OutputPathTextBox" TextWrapping="Wrap" Text="Path to output folder..." Width="298"/>
+                <TextBox x:Name="OutputPathTextBox" TextWrapping="Wrap" Width="298"/>
                 <Button x:Name="OutputPathBtn" Content="..." Width="56" Click="OutputPathBtn_Click"/>
             </StackPanel>
-            <ListBox x:Name="PakListBox" Height="100" Margin="10,0" BorderBrush="#FF474747" BorderThickness="2" ItemsSource="{Binding PakListBoxItems, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="PakListBox_ItemSelected">
+            <ListBox x:Name="PakListBox" Height="100" Margin="10,0" BorderBrush="#FF474747" BorderThickness="2" ItemsSource="{Binding PakListBoxItems, UpdateSourceTrigger=PropertyChanged}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -41,18 +41,9 @@
             </ListBox>
             <Grid Height="26" Margin="10,10">
                 <Button x:Name="UnpackAllBtn" Content="Unpack All" Width="105" HorizontalAlignment="Left" Click="UnpackAllBtn_Click" IsEnabled="{Binding ElementName=PakListBox, Path=HasItems}"/>
-                <Button x:Name="UnpackSelectedBtn" Content="Unpack Selected" Width="105" HorizontalAlignment="Right" Click="UnpackSelectedBtn_Click" IsEnabled="False"/>
+                <Button x:Name="UnpackSelectedBtn" Content="Unpack Selected" Width="105" HorizontalAlignment="Right" Click="UnpackSelectedBtn_Click" IsEnabled="{Binding ElementName=PakListBox, Path=SelectedItems.Count}"/>
                 <Button x:Name="RefreshPakListBtn" Content="Refresh Pak List" HorizontalAlignment="Left" Margin="164,-1,0,0" Click="RefreshPakListBtn_Click" VerticalAlignment="Top" Width="105" IsEnabled="{Binding ElementName=PakListBox, Path=HasItems}"/>
             </Grid>
-            <Separator Height="14" Margin="0,-13"/>
-            <StatusBar Height="28" Background="Transparent" Margin="10,0">
-                <StatusBarItem Grid.Column="2">
-                    <TextBlock Text="Status:" />
-                </StatusBarItem>
-                <StatusBarItem Grid.Column="2">
-                    <TextBlock Text="bind_this" />
-                </StatusBarItem>
-            </StatusBar>
         </StackPanel>
     </DockPanel>
 </Controls:MetroWindow>

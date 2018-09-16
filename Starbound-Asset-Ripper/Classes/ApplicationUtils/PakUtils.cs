@@ -8,6 +8,28 @@ namespace ApplicationUtils
 {
     public static class PakUtils
     {
+        public static Dictionary<string, string> GetPakFiles(string WorkshopPath)
+        {
+            Dictionary<string, string> pakFiles = new Dictionary<string, string>();
+            string[] workshopModFolders = Directory.GetDirectories(WorkshopPath);
+
+            foreach (string folder in workshopModFolders)
+            {
+                string[] workshopModFolderFiles = Directory.GetFiles(folder);
+                foreach (string file in workshopModFolderFiles)
+                {
+                    if (file.Contains(".pak"))
+                    {
+                        string dictKey = $".pak in {FileUtils.GetFolderNameFromFilePath(file)}";
+                        string dictVal = file;
+                        pakFiles.Add(dictKey, dictVal);
+                    }
+                }
+            }
+
+            return pakFiles;
+        }
+
         public static void UnpackPakFile(string SteamPath, string PakFilePath, string OutputPath)
         {
            

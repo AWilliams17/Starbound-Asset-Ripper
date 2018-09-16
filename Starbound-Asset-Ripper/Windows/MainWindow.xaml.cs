@@ -15,6 +15,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Collections.Concurrent;
 using System.Windows.Controls;
+using Registrar;
 
 namespace Starbound_Asset_Ripper
 {
@@ -28,15 +29,9 @@ namespace Starbound_Asset_Ripper
     /// </summary>
     public partial class MainWindow
     {
-        // Paths
-        private bool steamPathSet = false;
-        private bool outputPathSet = false;
-        private bool workshopPathSet = false;
-
         // Misc
         static ObservableConcurrentDictionary<string, string> pakDictionary = new ObservableConcurrentDictionary<string, string>();
         static Config config = new Config();
-        static string currentStatus = String.Empty;
 
         // Windows
         private static UpdateWindow updateWindow;
@@ -52,6 +47,25 @@ namespace Starbound_Asset_Ripper
             //{
             //    MessageBox.Show("Warning - You are not running as an administrator. It is highly recommended you do so.", "Not Administrator Warning");
             //}
+
+            try
+            {
+                config.settings.LoadSettings();
+            }
+            catch (RegLoadException)
+            {
+                try
+                {
+                    config.settings.SaveSettings();
+                }
+                catch (RegSaveException ex)
+                {
+                    MessageBox.Show($"Failed to save default settings. Error message: {ex.Message}");
+                }
+            }
+
+            HandleSteamPath();
+            HandleOutputPath();
         }
 
         public ObservableConcurrentDictionary<string, string> PakListBoxItems
@@ -59,26 +73,82 @@ namespace Starbound_Asset_Ripper
             get { return pakDictionary; }
         }
 
-        private void PakListBox_ItemSelected(object sender, SelectionChangedEventArgs e)
-        {
-            if (PakListBox.SelectedItems.Count > 0)
-            {
-                UnpackSelectedBtn.IsEnabled = true;
-            }
-            else
-            {
-                UnpackSelectedBtn.IsEnabled = false;
-            }
-        }
-
         private void OutputPathBtn_Click(object sender, RoutedEventArgs e)
         {
-            pakDictionary.Add("Test", "Testt");
+            string outputPath = FileUtils.SelectFolderDialog("Select the folder to unload pak contents to.");
+            if (outputPath != null)
+            {
+                config.settings.SetOption("OutputPath", outputPath);
+                HandleOutputPath();
+            }
         }
 
         private void SteamPathBtn_Click(object sender, RoutedEventArgs e)
         {
+            string steamPath = FileUtils.SelectFolderDialog("Select the Steam folder.");
+            if (steamPath != null)
+            {
+                config.settings.SetOption("SteamPath", steamPath);
+                HandleSteamPath();
+            }
+        }
 
+        private void HandleSteamPath()
+        {
+            string steamPath = config.settings.GetOption<string>("SteamPath");
+            if (steamPath != "")
+            {
+                SteamPathTextBox.Text = steamPath;
+                TryLoadPakFiles();
+            }
+            else
+            {
+                SteamPathTextBox.Text = "Path to Steam installation...";
+                ClearPakDictionary();
+            }
+        }
+
+        private void HandleOutputPath()
+        {
+            string outputPath = config.settings.GetOption<string>("OutputPath");
+            if (outputPath != "")
+            {
+                OutputPathTextBox.Text = outputPath;
+            }
+            else
+            {
+                OutputPathTextBox.Text = "Path to output folder...";
+            }
+        }
+
+        private void TryLoadPakFiles()
+        {
+            string steamPath = config.settings.GetOption<string>("SteamPath");
+
+            if (steamPath != "")
+            {
+                try
+                {
+                    string workshopPath = FileUtils.GetWorkShopPath(steamPath);
+                    Dictionary<string, string> pakFiles = PakUtils.GetPakFiles(workshopPath);
+                    foreach (KeyValuePair<string, string>kvp in pakFiles)
+                    {
+                        pakDictionary.Add(kvp.Key, kvp.Value);
+                    }
+                }
+                catch (FileNotFoundException ex)
+                {
+                    // Show message box
+                }
+            }
+        }
+
+        private void ClearPakDictionary()  // Since ObservableConcurrentDictionary doesn't have Clear()?
+        {
+            foreach (string key in pakDictionary.Keys)
+            {
+                pakDictionary.Remove(key);
+            }
         }
 
         private void HelpBtn_Click(object sender, RoutedEventArgs e)
@@ -104,21 +174,24 @@ namespace Starbound_Asset_Ripper
 
         private void UpdateBtn_Click(object sender, RoutedEventArgs e)
         {
-            bool windowOpen = false;
+            if (!IsWindowOpen(typeof(UpdateWindow)))
+            {
+                UpdateWindow updateWindow = new UpdateWindow();
+                updateWindow.Show();
+            }
+        }
 
+        private bool IsWindowOpen(Type WindowType)
+        {
+            bool windowOpen = false;
             foreach (Window window in Application.Current.Windows)
             {
-                if (window.GetType() == typeof(UpdateWindow))
+                if (window.GetType() == WindowType)
                 {
                     windowOpen = true;
                 }
             }
-
-            if (!windowOpen)
-            {
-                updateWindow = new UpdateWindow();
-                updateWindow.Show();
-            }
+            return windowOpen;
         }
         
         private async void UnpackSelectedBtn_Click(object sender, RoutedEventArgs e)
@@ -133,43 +206,13 @@ namespace Starbound_Asset_Ripper
 
         private void RefreshPakListBtn_Click(Object sender, RoutedEventArgs e)
         {
-            
+            ClearPakDictionary();
+            TryLoadPakFiles();
         }
 
         private void MainWindow_Closing(object sender, EventArgs e)
         {
             config.settings.SaveSettings();
-        }
-
-        private void SetStatusLabel(string LabelText, Brush StatusColor)
-        {
-            //StatusLabel.Content = LabelText;
-            //StatusLabel.Foreground = StatusColor;
-        }
-
-        private void UpdateLabels()
-        {
-            
-        }
-
-        private void UpdateButtons()
-        {
-           
-        }
-
-        private void UpdateTextBoxes()
-        {
-            
-        }
-
-        private void UpdatePakList()
-        {
-            
-        }
-
-        private void UpdateAllControls(bool AffectBrowseButtons = false, bool AffectPakButtons = false, bool AffectPakList = false, bool AffectLabels = false)
-        {
-            
         }
     }
 }
