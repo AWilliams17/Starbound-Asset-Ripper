@@ -34,7 +34,7 @@ namespace ApplicationUtils
                         string fileSize = FileUtils.FileSizeHelper.GetHumanReadableSize(pakFileInfo.Length);
                         string lastModifiedDate = pakFileInfo.LastWriteTime.ToString("dd/MM/yy HH:mm:ss");
 
-                        string[] dictVal = new string[3] { file, fileSize, lastModifiedDate }; 
+                        string[] dictVal = new string[3] { file, fileSize, lastModifiedDate };
                         pakFiles.Add(dictKey, dictVal);
                     }
                 }
@@ -42,44 +42,5 @@ namespace ApplicationUtils
 
             return pakFiles;
         }
-
-        /// <summary>
-        /// Unpack all .pak files in the given dictionary. Opens the Starbound CLI asset_unpacker.exe and feeds the path to the .pak
-        /// the files into it, and then returns the results from the asset_unpacker.exe.
-        /// </summary>
-        /// <param name="SteamPath">The path to the Steam directory.</param>
-        /// <param name="OutputPath">The path to spit the contents of the .pak out into.</param>
-        /// <param name="PakFiles">A dictionary containing key/values where the value is the path of a .pak file.</param>
-        public static void UnpackPakFile(string SteamPath, string OutputPath, string PakFilePath)
-        {
-            Dictionary<string, string> operationResults = new Dictionary<string, string>();
-            string assetUnpackerPath = TryGetAssetUnpackerPath(SteamPath);
-            string[] assetUnpackerArgs = new string[2] { $"\"{PakFilePath}\"", $"\"{OutputPath}\"" };
-
-            if (assetUnpackerPath == null) throw new FileNotFoundException("The Starbound Asset Unpacker CLI was not found.");
-
-
-
-        }
-
-        private static string TryGetAssetUnpackerPath(string SteamPath)
-        {
-            string assetUnpackerPath = $"{SteamPath}\\steamapps\\common\\Starbound\\win32\\asset_unpacker.exe";
-            if (File.Exists(assetUnpackerPath))
-            {
-                return assetUnpackerPath;
-            }
-            else return null;
-        }
-    }
-    
-    public class UnpackPakException : Exception
-    {
-        public UnpackPakException() { }
-        public UnpackPakException(string message) : base(message) { }
-        public UnpackPakException(string message, Exception inner) : base(message, inner) { }
-        protected UnpackPakException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

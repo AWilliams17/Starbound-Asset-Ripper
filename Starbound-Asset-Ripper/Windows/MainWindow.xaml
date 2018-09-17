@@ -10,12 +10,12 @@
     <DockPanel LastChildFill="False">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File" x:Name="menuFileDropdown">
-                <MenuItem x:Name="UpdateBtn" Header="Update" IsCheckable="true" Click="UpdateBtn_Click"/>
-                <MenuItem x:Name="ExitBtn" Header="Exit" IsCheckable="true" Click="ExitBtn_Click"/>
+                <MenuItem x:Name="UpdateBtn" Header="Update" IsCheckable="False" Click="UpdateBtn_Click"/>
+                <MenuItem x:Name="ExitBtn" Header="Exit" IsCheckable="False" Click="ExitBtn_Click"/>
             </MenuItem>
             <MenuItem Header="About" x:Name="menuAboutDropdown">
-                <MenuItem x:Name="GithubBtn" Header="Github" IsCheckable="true" Click="GithubBtn_Click"/>
-                <MenuItem x:Name="RedditBtn" Header="Reddit" IsCheckable="true" Click="RedditBtn_Click"/>
+                <MenuItem x:Name="GithubBtn" Header="Github" IsCheckable="False" Click="GithubBtn_Click"/>
+                <MenuItem x:Name="RedditBtn" Header="Reddit" IsCheckable="False" Click="RedditBtn_Click"/>
             </MenuItem>
         </Menu>
         <StackPanel x:Name="doelenContentPanel" Orientation="Vertical" Width="452" Margin="0,5,0,0">

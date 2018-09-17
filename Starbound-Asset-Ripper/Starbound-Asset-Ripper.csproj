@@ -119,6 +119,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\AssetUnpacker.cs" />
     <Compile Include="Classes\Utils\FileUtils\DialogHelpers.cs" />
     <Compile Include="Classes\Utils\FileUtils\FileSizeHelper.cs" />
     <Compile Include="Classes\Utils\FileUtils\FolderNameHelper.cs" />
