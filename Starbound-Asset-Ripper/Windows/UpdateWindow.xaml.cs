@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
+// TODO: This needs to be checked to make sure the Tasks are doing what they should.
+// Pretty sure this is not going to fly.
 namespace Starbound_Asset_Ripper.Windows
 {
     /// <summary>
