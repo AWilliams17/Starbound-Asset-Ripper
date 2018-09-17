@@ -1,15 +1,16 @@
+**In the midst of a complete re-write of codebase. Will evaluate these ToDos when I'm done.**
 ## Configuration
-* [x] Handle cases for when the registry can not be saved to
-* [x] Handle cases for when the registry can not be read from
+* [ ] Handle cases for when the registry can not be saved to
+* [ ] Handle cases for when the registry can not be read from
 
 ## Unpacking
-* [x] Verify the folder the program is looking at is correct (search for .pak files)
-* [x] List all .pak files found in the folder (if any), using the folder name as the name of the .pak
-* [x] Unpack selected file functionality
-* [x] Unpack all functionality
+* [ ] Verify the folder the program is looking at is correct (search for .pak files)
+* [ ] List all .pak files found in the folder (if any), using the folder name as the name of the .pak
+* [ ] Unpack selected file functionality
+* [ ] Unpack all functionality
 
 ## Misc
 * [ ] Unit tests
-* [x] On start, make sure the folders selected exist (if it's not the first time the program is started)
-* [x] Update checking functionality
+* [ ] On start, make sure the folders selected exist (if it's not the first time the program is started)
+* [ ] Update checking functionality
 * [ ] Help documentation
