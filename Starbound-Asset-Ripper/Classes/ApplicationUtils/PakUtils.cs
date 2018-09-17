@@ -15,8 +15,8 @@ namespace ApplicationUtils
         /// Attempts to search for all files in the supplied path ending with a '.pak' file extension.
         /// </summary>
         /// <param name="WorkshopPath">The path to the folder to search for .pak files in.</param>
-        /// <returns></returns>
-        public static Dictionary<string, string> GetPakFiles(string WorkshopPath)
+        /// <returns>A dictionary with the folder name as a key, and the .pak file path as the value, or null if it didn't find any.</returns>
+        public static Dictionary<string, string> TryGetPakFiles(string WorkshopPath)
         {
             Dictionary<string, string> pakFiles = new Dictionary<string, string>();
             string[] workshopModFolders = Directory.GetDirectories(WorkshopPath);
@@ -35,14 +35,33 @@ namespace ApplicationUtils
                 }
             }
 
-            return pakFiles;
+            if (pakFiles.Count != 0)
+            {
+                return pakFiles;
+            }
+
+            else return null;
         }
 
+        /// <summary>
+        /// Unpack a .pak file from the given path. Opens the Starbound CLI asset_unpacker.exe and feeds the path to the .pak
+        /// file into it, and then returns the result from the asset_unpacker.exe.
+        /// </summary>
+        /// <param name="SteamPath">The path to the Steam directory.</param>
+        /// <param name="PakFilePath">The path to the target .Pak file to unpack.</param>
+        /// <param name="OutputPath">The path to spit the contents of the .pak out into.</param>
         public static void UnpackPakFile(string SteamPath, string PakFilePath, string OutputPath)
         {
            
         }
 
+        /// <summary>
+        /// Unpacks all .pak files in a listbox into the target directory.
+        /// </summary>
+        /// <param name="SteamPath">The path to the Steam directory.</param>
+        /// <param name="OutputPath">The path to spit the contents of .pak files into. </param>
+        /// <param name="PakListBox">The listbox containing the .pak files.</param>
+        /// <param name="PakDictionary">The dictionary with details concerning all the .pak files.</param>
         public static void UnpackMultiplePaks(string SteamPath, string OutputPath, ListBox PakListBox, Dictionary<string, string> PakDictionary)
         {
             
