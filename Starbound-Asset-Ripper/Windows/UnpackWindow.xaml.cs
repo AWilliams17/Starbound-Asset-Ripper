@@ -22,14 +22,13 @@ namespace Starbound_Asset_Ripper.Windows
     /// </summary>
     public partial class UnpackWindow
     {
-        private bool canClose = false;
+        private bool _canClose = false;
+        private bool _taskRunning = true;
         private string _steamPath;
         private string _outputPath;
         private CancellationTokenSource _cancellationToken;
-        private ParallelOptions _parallelOptions;
         private AssetUnpacker _assetUnpacker;
         private Dictionary<string, string[]> _targetPaksDict;
-        private Thread _currentThread;
 
         public UnpackWindow(string SteamPath, string OutputPath, Dictionary<string, string[]>PaksToUnpack)
         {
@@ -37,39 +36,34 @@ namespace Starbound_Asset_Ripper.Windows
             _steamPath = SteamPath;
             _outputPath = OutputPath;
             _targetPaksDict = PaksToUnpack;
-            _assetUnpacker = new AssetUnpacker(SteamPath, OutputPath); // TRY CATCH HERE
             _cancellationToken = new CancellationTokenSource();
-            _cancellationToken.Token.ThrowIfCancellationRequested();
-            _parallelOptions = new ParallelOptions
-            {
-                MaxDegreeOfParallelism = Environment.ProcessorCount,
-                CancellationToken = _cancellationToken.Token,
-            };
+            _assetUnpacker = new AssetUnpacker(SteamPath, OutputPath); // TRY CATCH HERE
 
             Unpack();
         }
 
         private async void Unpack()
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                _currentThread = Thread.CurrentThread;
                 int itemsRemaining = _targetPaksDict.Count;
+                
                 foreach (KeyValuePair<string, string[]> kvp in _targetPaksDict)
                 {
                     string pakPath = kvp.Value[0];
                     string pakFileSize = kvp.Value[1];
-                    string result = _assetUnpacker.UnpackPakFile(_steamPath, _outputPath, pakPath);
+                    string result = null;
+                    SetLabels(kvp.Key, pakFileSize, itemsRemaining);
+                    result = await _assetUnpacker.UnpackPakFile(_steamPath, _outputPath, pakPath);
+                    if (!_taskRunning) break;
                     itemsRemaining -= 1;
                     AddResultToListBox(result);
-                    SetLabels(kvp.Key, pakFileSize, itemsRemaining);
                 }
             });
-
-            _currentThread = null;
-            canClose = true;
+            _canClose = true;
             CancelBtn.Content = "Close";
             SetLabels("No operation in progress.", "Not unpacking anything.", 0);
+            _cancellationToken.Dispose();
         }
 
         private void SetLabels(string PakKey, string FileSize, int ItemsRemaining)
@@ -92,12 +86,10 @@ namespace Starbound_Asset_Ripper.Windows
 
         private void CancelBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (!canClose)
+            if (!_canClose)
             {
-                Task.Factory.StartNew(() =>
-                {
-                    _cancellationToken.Cancel();
-                });
+                _assetUnpacker.CancelCurrentOperation();
+                _taskRunning = false;
             }
             else Close();
         }
