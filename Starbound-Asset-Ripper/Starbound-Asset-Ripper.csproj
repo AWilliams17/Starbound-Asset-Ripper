@@ -120,7 +120,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\FileUtils\DialogHelpers.cs" />
-    <Compile Include="Classes\FileUtils\GetFolderNameHelper.cs" />
+    <Compile Include="Classes\FileUtils\FolderNameHelper.cs" />
     <Compile Include="Windows\UnpackWindow.xaml.cs">
       <DependentUpon>UnpackWindow.xaml</DependentUpon>
     </Compile>

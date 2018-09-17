@@ -128,14 +128,14 @@ namespace Starbound_Asset_Ripper
                 {
                     string workshopPath = WorkshopPathHelper.TryGetWorkShopPath(steamPath);
                     Dictionary<string, string> pakFiles = PakUtils.GetPakFiles(workshopPath);
-                    foreach (KeyValuePair<string, string>kvp in pakFiles)
+                    foreach (KeyValuePair<string, string> kvp in pakFiles)
                     {
                         pakDictionary.Add(kvp.Key, kvp.Value);
                     }
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message, "Starbound Workshop Folder not found.");
                     ClearPakDictionary(); // If the path was previously correct, then clear out any detected paks.
                 }
             }
@@ -162,13 +162,11 @@ namespace Starbound_Asset_Ripper
         private void RedditBtn_Click(object sender, RoutedEventArgs e)
         {
             // TOOD: Try-Catch.
-            // Also since it can time out make it async.
             string redditThreadLink = WebUtilsRelated.TryGetRedditThread();
             if (redditThreadLink != null)
             {
                 Process.Start(redditThreadLink);
             }
-            // TODO: Else throw message box.
         }
 
         private void UpdateBtn_Click(object sender, RoutedEventArgs e)

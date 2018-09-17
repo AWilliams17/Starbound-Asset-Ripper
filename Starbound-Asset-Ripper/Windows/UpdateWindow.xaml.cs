@@ -22,16 +22,15 @@ namespace Starbound_Asset_Ripper.Windows
         private async void Update()
         {
             bool updateAvailable = false;
-            bool timedOut = false;
-            bool checkFailed = false;
+            string checkFailureMessage = null;
+            DispatcherTimer.Tick += DispatcherTimer_Tick;
+            DispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             await Task.Run(() =>
             {
                 try
                 {
-                    updateAvailable = WebUtils.LatestReleaseParser.GetUpdateAvailable("AWilliams17", "Starbound-Asset-Ripper", 5);
-                    DispatcherTimer.Tick += DispatcherTimer_Tick;
-                    DispatcherTimer.Interval = new TimeSpan(0, 0, 1);
                     DispatcherTimer.Start();
+                    updateAvailable = WebUtils.LatestReleaseParser.GetUpdateAvailable("AWilliams17", "Starbound-Asset-Ripper", 5);
                 }
                 catch (Exception ex)
                 {
@@ -42,43 +41,35 @@ namespace Starbound_Asset_Ripper.Windows
                         WebException webEX = (WebException)ex;
                         if (webEX.Status == WebExceptionStatus.Timeout)
                         {
-                            timedOut = true;
+                            checkFailureMessage = "The check timed out after 5 seconds.";
                         }
                     }
                     else
                     {
                         if (ex is FormatException)
                         {
-                            checkFailed = true;
+                            checkFailureMessage = "Error parsing JSON. Check failed.";
                         }
-                        MessageBox.Show(ex.Message);
                     }
                 }
             });
+            DispatcherTimer.Stop();
 
-            if (DispatcherTimer.IsEnabled)
+            if (checkFailureMessage == null)
             {
-                DispatcherTimer.Stop();
-            }
-
-            if (!checkFailed)
-            {
-                if (!timedOut)
+                if (updateAvailable)
                 {
-                    if (updateAvailable)
+                    string updateAvailableMessage = "An update is available. Would you like to go to the download page?";
+                    var userAction = MessageBox.Show(updateAvailableMessage, "Update Available", MessageBoxButton.YesNo);
+                    if (userAction == MessageBoxResult.Yes)
                     {
-                        string updateAvailableMessage = "An update is available. Would you like to go to the download page?";
-                        var userAction = MessageBox.Show(updateAvailableMessage, "Update Available", MessageBoxButton.YesNo);
-                        if (userAction == MessageBoxResult.Yes)
-                        {
-                            Process.Start("https://github.com/AWilliams17/Starbound-Asset-Ripper/releases");
-                        }
+                        Process.Start("https://github.com/AWilliams17/Starbound-Asset-Ripper/releases");
                     }
-                    else MessageBox.Show("No updates were found.", "No Updates available");
                 }
-                else MessageBox.Show("The update check timed out.", "Timed Out");
+                else MessageBox.Show("No updates found.", "No updates available.");
             }
-            
+            else MessageBox.Show(checkFailureMessage, "Error checking for updates");
+
             Close();
         }
 

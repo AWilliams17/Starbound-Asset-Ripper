@@ -22,7 +22,7 @@ namespace ApplicationUtils
                 return workshopPath;
             }
 
-            return null;
+            throw new DirectoryNotFoundException("The Starbound workshop folder was not found in the Steam path. Do you have any mods installed?");
         }
     }
 }
