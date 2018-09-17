@@ -119,8 +119,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Classes\FileUtils\DialogHelpers.cs" />
-    <Compile Include="Classes\FileUtils\FolderNameHelper.cs" />
+    <Compile Include="Classes\Utils\FileUtils\DialogHelpers.cs" />
+    <Compile Include="Classes\Utils\FileUtils\FolderNameHelper.cs" />
+    <Compile Include="Classes\Utils\WPFUtils\WindowHelpers.cs" />
     <Compile Include="Windows\UnpackWindow.xaml.cs">
       <DependentUpon>UnpackWindow.xaml</DependentUpon>
     </Compile>
@@ -135,12 +136,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\ApplicationUtils\WorkshopPathHelper.cs" />
-    <Compile Include="Classes\ApplicationUtils\PakUtils.cs" />
-    <Compile Include="Classes\ApplicationUtils\WebUtilsRelated.cs" />
-    <Compile Include="Classes\WebUtils\GithubReadmeParser.cs" />
-    <Compile Include="Classes\WebUtils\GithubReleaseParser.cs" />
-    <Compile Include="Classes\WebUtils\WebRequests.cs" />
+    <Compile Include="Classes\Utils\ApplicationUtils\WorkshopPathHelper.cs" />
+    <Compile Include="Classes\Utils\ApplicationUtils\PakUtils.cs" />
+    <Compile Include="Classes\Utils\ApplicationUtils\WebUtilsRelated.cs" />
+    <Compile Include="Classes\Utils\WebUtils\GithubReadmeParser.cs" />
+    <Compile Include="Classes\Utils\WebUtils\GithubReleaseParser.cs" />
+    <Compile Include="Classes\Utils\WebUtils\WebRequests.cs" />
     <Compile Include="Classes\Config\ConfigContainer.cs" />
     <Compile Include="Classes\Config\Validators.cs" />
     <Compile Include="Windows\MainWindow.xaml.cs">

@@ -17,6 +17,7 @@ using System.Collections.Concurrent;
 using System.Windows.Controls;
 using Registrar;
 using System.Diagnostics;
+using System.Net;
 
 namespace Starbound_Asset_Ripper
 {
@@ -159,36 +160,32 @@ namespace Starbound_Asset_Ripper
             Process.Start("https://github.com/AWilliams17/Starbound-Asset-Ripper/");
         }
 
-        private void RedditBtn_Click(object sender, RoutedEventArgs e)
+        private async void RedditBtn_Click(object sender, RoutedEventArgs e)
         {
-            // TOOD: Try-Catch.
-            string redditThreadLink = WebUtilsRelated.TryGetRedditThread();
-            if (redditThreadLink != null)
+            await Task.Run(() =>
             {
-                Process.Start(redditThreadLink);
-            }
+                try
+                {
+                    string redditThreadLink = WebUtilsRelated.TryGetRedditThread();
+                    if (redditThreadLink != null)
+                    {
+                        Process.Start(redditThreadLink);
+                    }
+                }
+                catch (WebException)
+                {
+                    MessageBox.Show("Failed to get Reddit thread link from Github Readme.");
+                }
+            });
         }
 
         private void UpdateBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (!IsWindowOpen(typeof(UpdateWindow)))
+            if (!WPFUtils.WindowHelpers.IsWindowOpen(typeof(UpdateWindow)))
             {
                 UpdateWindow updateWindow = new UpdateWindow();
                 updateWindow.Show();
             }
-        }
-
-        private bool IsWindowOpen(Type WindowType)
-        {
-            bool windowOpen = false;
-            foreach (Window window in Application.Current.Windows)
-            {
-                if (window.GetType() == WindowType)
-                {
-                    windowOpen = true;
-                }
-            }
-            return windowOpen;
         }
         
         private async void UnpackSelectedBtn_Click(object sender, RoutedEventArgs e)
