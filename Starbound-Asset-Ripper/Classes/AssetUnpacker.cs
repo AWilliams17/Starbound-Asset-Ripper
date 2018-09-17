@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,16 +10,20 @@ namespace Starbound_Asset_Ripper
     public class AssetUnpacker
     {
         private Process _assetUnpackerProcess;
-        private CancellationTokenSource _cancellationToken;
         private string _steamPath;
         private string _outputPath;
         private string _assetUnpackerPath;
 
+        /// <summary>
+        /// Constructor for AssetUnpacker. Throws FileNotFoundException if asset_unpacker.exe was
+        /// not found in the Starbound directory in the Steampath.
+        /// </summary>
+        /// <param name="SteamPath">The path to the Steam directory.</param>
+        /// <param name="OutputPath">The path the unpacker will spit the contents of the files out into.</param>
         public AssetUnpacker(string SteamPath, string OutputPath)
         {
             _steamPath = SteamPath;
             _outputPath = OutputPath;
-            _cancellationToken = new CancellationTokenSource();
             _assetUnpackerPath = TryGetAssetUnpackerPath(SteamPath);
             _assetUnpackerProcess = new Process
             {
@@ -31,17 +33,15 @@ namespace Starbound_Asset_Ripper
 
         /// <summary>
         /// Unpack all .pak files in the given dictionary. Opens the Starbound CLI asset_unpacker.exe and feeds the path to the .pak
-        /// the files into it, and then returns the results from the asset_unpacker.exe.
+        /// files into it, and then returns the results from the asset_unpacker.exe.
         /// </summary>
-        /// <param name="SteamPath">The path to the Steam directory.</param>
-        /// <param name="OutputPath">The path to spit the contents of the .pak out into.</param>
-        /// <param name="PakFiles">A dictionary containing key/values where the value is the path of a .pak file.</param>
+        /// <param name="PakFiles">A dictionary containing key/values of pak file deatils./param>
         /// <returns>Output from the operation.</returns>
-        public Task<string> UnpackPakFile(string SteamPath, string OutputPath, string PakFilePath)
+        public Task<string> UnpackPakFile(string PakFilePath) // TODO: Should handle ErrorOutput as well.
         {
             Dictionary<string, string> operationResults = new Dictionary<string, string>();
-            string assetUnpackerPath = TryGetAssetUnpackerPath(SteamPath);
-            string[] assetUnpackerArgs = new string[2] { $"\"{PakFilePath}\"", $"\"{OutputPath}\"" };
+            string assetUnpackerPath = TryGetAssetUnpackerPath(_steamPath);
+            string[] assetUnpackerArgs = new string[2] { $"\"{PakFilePath}\"", $"\"{_outputPath}\"" };
             string assetUnpackerOutput = String.Empty;
             TaskCompletionSource<string> taskCompletionSource = new TaskCompletionSource<string>();
 
@@ -64,25 +64,31 @@ namespace Starbound_Asset_Ripper
                 _assetUnpackerProcess.CancelOutputRead();
             };
 
-            _assetUnpackerProcess.Exited += (sender, args) =>
-            {
-                
-            };
-
             taskCompletionSource.Task.WaitForCompletionStatus();
             return taskCompletionSource.Task;
         }
 
+        /// <summary>
+        /// If an unpack operation is in progress (i.e: asset_unpacker.exe is working on something), this kills it.
+        /// </summary>
         public void CancelCurrentOperation()
         {
-            _assetUnpackerProcess.Kill();
-        }
-
-        public bool OperationInProgress()
-        {
-            return !_assetUnpackerProcess.HasExited;
+            try
+            {
+                _assetUnpackerProcess.Kill();
+            }
+            catch (InvalidOperationException)
+            {
+                // This only seems to get thrown if the process was already ended prior to this being
+                // called, so it's safe to just catch this and do nothing with it.
+            }
         }
         
+        /// <summary>
+        /// Get the asset_unpacker.exe path from the Steam path. Throws FileNotFoundException if it wasn't found.
+        /// </summary>
+        /// <param name="SteamPath">Path to the Steam directory.</param>
+        /// <returns>The asset unpacker path.</returns>
         private string TryGetAssetUnpackerPath(string SteamPath)
         {
             string assetUnpackerPath = $"{SteamPath}\\steamapps\\common\\Starbound\\win32\\asset_unpacker.exe";

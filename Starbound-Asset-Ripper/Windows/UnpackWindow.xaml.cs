@@ -1,19 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace Starbound_Asset_Ripper.Windows
 {
@@ -26,7 +16,6 @@ namespace Starbound_Asset_Ripper.Windows
         private bool _taskRunning = true;
         private string _steamPath;
         private string _outputPath;
-        private CancellationTokenSource _cancellationToken;
         private AssetUnpacker _assetUnpacker;
         private Dictionary<string, string[]> _targetPaksDict;
 
@@ -36,12 +25,18 @@ namespace Starbound_Asset_Ripper.Windows
             _steamPath = SteamPath;
             _outputPath = OutputPath;
             _targetPaksDict = PaksToUnpack;
-            _cancellationToken = new CancellationTokenSource();
-            _assetUnpacker = new AssetUnpacker(SteamPath, OutputPath); // TRY CATCH HERE
-
-            Unpack();
+            try
+            {
+                _assetUnpacker = new AssetUnpacker(SteamPath, OutputPath);
+                Unpack();
+            }
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show(ex.Message, "asset_unpacker.exe was not found.");
+                Close();
+            }
         }
-
+        
         private async void Unpack()
         {
             await Task.Run(async () =>
@@ -54,7 +49,7 @@ namespace Starbound_Asset_Ripper.Windows
                     string pakFileSize = kvp.Value[1];
                     string result = null;
                     SetLabels(kvp.Key, pakFileSize, itemsRemaining);
-                    result = await _assetUnpacker.UnpackPakFile(_steamPath, _outputPath, pakPath);
+                    result = await _assetUnpacker.UnpackPakFile(pakPath);
                     if (!_taskRunning) break;
                     itemsRemaining -= 1;
                     AddResultToListBox(result);
@@ -63,7 +58,6 @@ namespace Starbound_Asset_Ripper.Windows
             _canClose = true;
             CancelBtn.Content = "Close";
             SetLabels("No operation in progress.", "Not unpacking anything.", 0);
-            _cancellationToken.Dispose();
         }
 
         private void SetLabels(string PakKey, string FileSize, int ItemsRemaining)

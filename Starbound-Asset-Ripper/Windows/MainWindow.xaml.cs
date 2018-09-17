@@ -26,13 +26,8 @@ namespace Starbound_Asset_Ripper
     /// </summary>
     public partial class MainWindow
     {
-        // Misc
         private static Config config = new Config();
         private static ObservableConcurrentDictionary<string, string[]> pakDictionary = new ObservableConcurrentDictionary<string, string[]>();
-
-        // Windows
-        private static UpdateWindow updateWindow;
-        private static UnpackWindow unpackWindow;
         
         public MainWindow()
         {

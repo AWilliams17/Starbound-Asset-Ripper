@@ -20,7 +20,7 @@
                 </ListBox>
             </StackPanel>
             <StackPanel Height="28" Width="362" Orientation="Horizontal" Background="#FF322E2E">
-                <Label Content="Unpacking" HorizontalAlignment="Left"/>
+                <Label Content="Unpacking:" HorizontalAlignment="Left"/>
                 <Label Content="" HorizontalAlignment="Left" x:Name="PakKeyLabel"/>
             </StackPanel>
             <StackPanel Height="28" Width="362" Orientation="Horizontal" Background="#FF322E2E">
