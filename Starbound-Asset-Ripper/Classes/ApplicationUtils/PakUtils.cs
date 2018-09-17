@@ -6,8 +6,16 @@ using System.Windows.Controls;
 
 namespace ApplicationUtils
 {
+    /// <summary>
+    /// A helper class for manipulating Starbound .pak files.
+    /// </summary>
     public static class PakUtils
     {
+        /// <summary>
+        /// Attempts to search for all files in the supplied path ending with a '.pak' file extension.
+        /// </summary>
+        /// <param name="WorkshopPath">The path to the folder to search for .pak files in.</param>
+        /// <returns></returns>
         public static Dictionary<string, string> GetPakFiles(string WorkshopPath)
         {
             Dictionary<string, string> pakFiles = new Dictionary<string, string>();

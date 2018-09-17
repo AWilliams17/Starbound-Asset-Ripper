@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Starbound_Asset_Ripper.Windows"
         mc:Ignorable="d"
-        Title="Checking for an update..." Height="133.669" Width="307.729" Background="#FF252525" ResizeMode="NoResize">
+        Title="Checking for an update..." Height="155.002" Width="318.395" Background="#FF252525" ResizeMode="NoResize">
     <Grid>
         <Button x:Name="CancelBtn" Content="Cancel" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top" Width="281"/>
         <ProgressBar x:Name="TimeoutProgressBar" HorizontalAlignment="Left" Height="22" Margin="71,40,0,0" VerticalAlignment="Top" Width="220" Maximum="5" Value="-1"/>

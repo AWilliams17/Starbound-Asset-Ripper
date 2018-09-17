@@ -6,28 +6,27 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:Starbound_Asset_Ripper"
         mc:Ignorable="d"
-        Title="Starbound Asset Ripper" Height="282.421" Width="460.58" Background="#FF252525" TitleCharacterCasing="Normal">
+        Title="Starbound Asset Ripper" Height="285.421" Width="460.58" Background="#FF252525" TitleCharacterCasing="Normal">
     <DockPanel LastChildFill="False">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File" x:Name="menuFileDropdown">
-                <MenuItem x:Name="HelpBtn" Header="Help" IsCheckable="true" Click="HelpBtn_Click"/>
+                <MenuItem x:Name="UpdateBtn" Header="Update" IsCheckable="true" Click="UpdateBtn_Click"/>
                 <MenuItem x:Name="ExitBtn" Header="Exit" IsCheckable="true" Click="ExitBtn_Click"/>
             </MenuItem>
             <MenuItem Header="About" x:Name="menuAboutDropdown">
                 <MenuItem x:Name="GithubBtn" Header="Github" IsCheckable="true" Click="GithubBtn_Click"/>
                 <MenuItem x:Name="RedditBtn" Header="Reddit" IsCheckable="true" Click="RedditBtn_Click"/>
-                <MenuItem x:Name="UpdateBtn" Header="Update" IsCheckable="true" Click="UpdateBtn_Click"/>
             </MenuItem>
         </Menu>
         <StackPanel x:Name="doelenContentPanel" Orientation="Vertical" Width="452" Margin="0,5,0,0">
             <StackPanel Height="26" Orientation="Horizontal" Margin="10,0">
                 <Label Content="Steam Path:" Width="76"/>
-                <TextBox x:Name="SteamPathTextBox" TextWrapping="Wrap" Width="298"/>
+                <TextBox x:Name="SteamPathTextBox" TextWrapping="Wrap" Width="298" IsReadOnly="True"/>
                 <Button x:Name="SteamPathBtn" Content="..." Width="56" Click="SteamPathBtn_Click" Height="26" VerticalAlignment="Top"/>
             </StackPanel>
             <StackPanel Height="26" Orientation="Horizontal" Margin="10,10">
                 <Label Content="Output Path:" Width="76"/>
-                <TextBox x:Name="OutputPathTextBox" TextWrapping="Wrap" Width="298"/>
+                <TextBox x:Name="OutputPathTextBox" TextWrapping="Wrap" Width="298" IsReadOnly="True"/>
                 <Button x:Name="OutputPathBtn" Content="..." Width="56" Click="OutputPathBtn_Click"/>
             </StackPanel>
             <ListBox x:Name="PakListBox" Height="100" Margin="10,0" BorderBrush="#FF474747" BorderThickness="2" ItemsSource="{Binding PakListBoxItems, UpdateSourceTrigger=PropertyChanged}">

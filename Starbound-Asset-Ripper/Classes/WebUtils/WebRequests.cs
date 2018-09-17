@@ -5,9 +5,18 @@ using System.Web.Script.Serialization;
 
 namespace WebUtils
 {
+    /// <summary>
+    /// A helper class for making simple web requests.
+    /// </summary>
     public static class WebRequests
     {
-        public static string DownloadString(string Url, int TimeOut)
+        /// <summary>
+        /// Attempts to download a string from a remote URL. Throws WebException if it timed out.
+        /// </summary>
+        /// <param name="Url">The URL to download the string from.</param>
+        /// <param name="TimeOut">After this specified time, the request will time out.</param>
+        /// <returns>The downloaded string, or null if it failed to download.</returns>
+        public static string TryDownloadString(string Url, int TimeOut)
         {
             string downloadResult = null;
             WebClient webClient = new WebClient();
@@ -16,33 +25,40 @@ namespace WebUtils
             if (CanConnect(Url, TimeOut))
             {
                 downloadResult = webClient.DownloadString(Url);
-                // RETURN HERE
             }
-
-            // THROW CAN NOT CONNECT
-            return "";
+            
+            return downloadResult;
         }
 
-        public static Dictionary<string, object> ParseJson(string JsonUrl, int TimeOut)
+        /// <summary>
+        /// Attempts to parse JSON from the remote url into a dictionary of key/value pairs. Throws WebException if it timed out.
+        /// </summary>
+        /// <param name="JsonUrl">The URL to read JSON from.</param>
+        /// <param name="TimeOut">After this specified time, the request will time out.</param>
+        /// <returns>A dictionary with the parsed JSON, or null if it failed to parse.</returns>
+        public static Dictionary<string, object> TryParseJson(string JsonUrl, int TimeOut)
         {
             Dictionary<string, object> jsonDictionary = new Dictionary<string, object>();
 
             if (CanConnect(JsonUrl, TimeOut))
             {
-                var json_data = DownloadString(JsonUrl, TimeOut);
+                var json_data = TryDownloadString(JsonUrl, TimeOut);
                 JavaScriptSerializer jsSerializer = new JavaScriptSerializer();
                 var result = jsSerializer.DeserializeObject(json_data);
 
                 jsonDictionary = (Dictionary<string, object>)(result);
             }
-            else
-            {
-                // THROW CAN NOT CONNECT
-            }
+            else return null;
 
             return jsonDictionary;
         }
 
+        /// <summary>
+        /// Checks to see if a connection can be made to the given url. Throws WebException if it timed out.
+        /// </summary>
+        /// <param name="Url">The URL to check.</param>
+        /// <param name="TimeOut">After this specified time, the request will time out.</param>
+        /// <returns>True if a successful connection is made, false otherwise.</returns>
         public static bool CanConnect(string Url, int TimeOut)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);

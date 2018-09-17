@@ -23,6 +23,7 @@ namespace Starbound_Asset_Ripper.Windows
         {
             bool updateAvailable = false;
             bool timedOut = false;
+            bool checkFailed = false;
             await Task.Run(() =>
             {
                 try
@@ -34,10 +35,15 @@ namespace Starbound_Asset_Ripper.Windows
                 }
                 catch (WebException ex)
                 {
+                    DispatcherTimer.Stop();
                     if (ex.Status == WebExceptionStatus.Timeout)
                     {
-                        DispatcherTimer.Stop();
                         timedOut = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show(ex.Message);
+                        checkFailed = true;
                     }
                 }
             });
@@ -47,27 +53,24 @@ namespace Starbound_Asset_Ripper.Windows
                 DispatcherTimer.Stop();
             }
 
-            if (!timedOut)
+            if (!checkFailed)
             {
-                if (updateAvailable)
+                if (!timedOut)
                 {
-                    string updateAvailableMessage = "An update is available. Would you like to go to the download page?";
-                    var userAction = MessageBox.Show(updateAvailableMessage, "Update Available", MessageBoxButton.YesNo);
-                    if (userAction == MessageBoxResult.Yes)
+                    if (updateAvailable)
                     {
-                        Process.Start("https://github.com/AWilliams17/Starbound-Asset-Ripper/releases");
+                        string updateAvailableMessage = "An update is available. Would you like to go to the download page?";
+                        var userAction = MessageBox.Show(updateAvailableMessage, "Update Available", MessageBoxButton.YesNo);
+                        if (userAction == MessageBoxResult.Yes)
+                        {
+                            Process.Start("https://github.com/AWilliams17/Starbound-Asset-Ripper/releases");
+                        }
                     }
+                    else MessageBox.Show("No updates were found.", "No Updates available");
                 }
-                else
-                {
-                    MessageBox.Show("No updates were found.", "No Updates available");
-                }
+                else MessageBox.Show("The update check timed out.", "Timed Out");
             }
-            else
-            {
-                MessageBox.Show("The update check timed out.", "Timed Out");
-            }
-
+            
             Close();
         }
 

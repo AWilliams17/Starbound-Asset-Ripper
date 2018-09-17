@@ -19,23 +19,19 @@ using Registrar;
 
 namespace Starbound_Asset_Ripper
 {
-    /*
-     *  -PLANNING-
-     * 
-     * 
-    */
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow
     {
         // Misc
-        static ObservableConcurrentDictionary<string, string> pakDictionary = new ObservableConcurrentDictionary<string, string>();
-        static Config config = new Config();
+        private static Config config = new Config();
+        private static ObservableConcurrentDictionary<string, string> pakDictionary = new ObservableConcurrentDictionary<string, string>();
 
         // Windows
         private static UpdateWindow updateWindow;
-
+        private static UnpackWindow unpackWindow;
+        
         public MainWindow()
         {
             DataContext = this;
@@ -63,7 +59,7 @@ namespace Starbound_Asset_Ripper
                     MessageBox.Show($"Failed to save default settings. Error message: {ex.Message}");
                 }
             }
-
+            // Update the path textboxes
             HandleSteamPath();
             HandleOutputPath();
         }
@@ -79,7 +75,7 @@ namespace Starbound_Asset_Ripper
             if (outputPath != null)
             {
                 config.settings.SetOption("OutputPath", outputPath);
-                HandleOutputPath();
+                HandleOutputPath(); // Update the path textbox
             }
         }
 
@@ -89,7 +85,7 @@ namespace Starbound_Asset_Ripper
             if (steamPath != null)
             {
                 config.settings.SetOption("SteamPath", steamPath);
-                HandleSteamPath();
+                HandleSteamPath(); // Update the path textbox
             }
         }
 
@@ -136,9 +132,10 @@ namespace Starbound_Asset_Ripper
                         pakDictionary.Add(kvp.Key, kvp.Value);
                     }
                 }
-                catch (FileNotFoundException ex)
+                catch (DirectoryNotFoundException ex)
                 {
-                    // Show message box
+                    MessageBox.Show(ex.Message);
+                    ClearPakDictionary(); // If the path was previously correct, then clear out any detected paks.
                 }
             }
         }
@@ -149,11 +146,6 @@ namespace Starbound_Asset_Ripper
             {
                 pakDictionary.Remove(key);
             }
-        }
-
-        private void HelpBtn_Click(object sender, RoutedEventArgs e)
-        {
-            WebUtilsRelated.OpenGithubPage();  // TODO: Don't do this
         }
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
@@ -168,7 +160,6 @@ namespace Starbound_Asset_Ripper
 
         private void RedditBtn_Click(object sender, RoutedEventArgs e)
         {
-            // TRY-CATCH
             WebUtilsRelated.OpenRedditThread();
         }
 

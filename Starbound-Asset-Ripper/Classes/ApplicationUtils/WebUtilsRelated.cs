@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Net;
 using System.Reflection;
 using System.Windows;
 using WebUtils;
@@ -7,23 +8,26 @@ namespace ApplicationUtils
 {
     public static class WebUtilsRelated
     {
-        public static bool UpdateAvailable()
+        public static bool GetUpdateAvailable()
         {
-            // TRY-CATCH HERE
             string current_version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            string latestRelase = LatestReleaseParser.GetLatestRelease("AWilliams17", "Starbound-Asset-Ripper", 5);
-            if (current_version != latestRelase)
+            string latestRelease = LatestReleaseParser.TryGetLatestRelease("AWilliams17", "Starbound-Asset-Ripper", 5);
+            if (latestRelease != null)
             {
-                return true;
+                if (current_version != latestRelease)
+                {
+                    return true;
+                }
+                return false;
             }
-            return false;
+            throw new WebException("Failed to find latest release.");
         }
 
-        public static void OpenRedditThread()
+        public static string TryGetRedditThread()
         {
             string readmeLink = "https://raw.githubusercontent.com/AWilliams17/Starbound-Asset-Ripper/master/README.md";
-            string redditLink = ReadmeParser.GetLineFromReadme(readmeLink, "Reddit: ", 5);
-            Process.Start(redditLink);
+            string redditLink = GithubReadmeParser.TryGetLineFromReadme(readmeLink, "Reddit: ", 5);
+            return redditLink;
         }
 
         public static void OpenGithubPage()
