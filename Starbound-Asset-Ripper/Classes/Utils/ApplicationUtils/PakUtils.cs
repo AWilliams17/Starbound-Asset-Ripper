@@ -16,9 +16,9 @@ namespace ApplicationUtils
         /// </summary>
         /// <param name="WorkshopPath">The path to the folder to search for .pak files in.</param>
         /// <returns>A dictionary with the folder name as a key, and the .pak file path as the value.</returns>
-        public static Dictionary<string, string> GetPakFiles(string WorkshopPath)
+        public static Dictionary<string, string[]> GetPakFiles(string WorkshopPath)
         {
-            Dictionary<string, string> pakFiles = new Dictionary<string, string>();
+            Dictionary<string, string[]> pakFiles = new Dictionary<string, string[]>();
             string[] workshopModFolders = Directory.GetDirectories(WorkshopPath);
 
             foreach (string folder in workshopModFolders)
@@ -28,8 +28,13 @@ namespace ApplicationUtils
                 {
                     if (file.Contains(".pak"))
                     {
+                        FileInfo pakFileInfo = new FileInfo(file.TrimEnd('\\'));
+
                         string dictKey = $".pak in {FileUtils.FolderNameFromPath.GetFolderNameFromFilePath(file)}";
-                        string dictVal = file;
+                        string fileSize = FileUtils.FileSizeHelper.GetHumanReadableSize(pakFileInfo.Length);
+                        string lastModifiedDate = pakFileInfo.LastWriteTime.ToString("dd/MM/yy HH:mm:ss");
+
+                        string[] dictVal = new string[3] { file, fileSize, lastModifiedDate }; 
                         pakFiles.Add(dictKey, dictVal);
                     }
                 }
@@ -39,27 +44,32 @@ namespace ApplicationUtils
         }
 
         /// <summary>
-        /// Unpack a .pak file from the given path. Opens the Starbound CLI asset_unpacker.exe and feeds the path to the .pak
-        /// file into it, and then returns the result from the asset_unpacker.exe.
+        /// Unpack all .pak files in the given dictionary. Opens the Starbound CLI asset_unpacker.exe and feeds the path to the .pak
+        /// the files into it, and then returns the results from the asset_unpacker.exe.
         /// </summary>
         /// <param name="SteamPath">The path to the Steam directory.</param>
-        /// <param name="PakFilePath">The path to the target .Pak file to unpack.</param>
         /// <param name="OutputPath">The path to spit the contents of the .pak out into.</param>
-        public static void UnpackPakFile(string SteamPath, string PakFilePath, string OutputPath)
+        /// <param name="PakFiles">A dictionary containing key/values where the value is the path of a .pak file.</param>
+        public static void UnpackPakFile(string SteamPath, string OutputPath, string PakFilePath)
         {
-           
+            Dictionary<string, string> operationResults = new Dictionary<string, string>();
+            string assetUnpackerPath = TryGetAssetUnpackerPath(SteamPath);
+            string[] assetUnpackerArgs = new string[2] { $"\"{PakFilePath}\"", $"\"{OutputPath}\"" };
+
+            if (assetUnpackerPath == null) throw new FileNotFoundException("The Starbound Asset Unpacker CLI was not found.");
+
+
+
         }
 
-        /// <summary>
-        /// Unpacks all .pak files in a listbox into the target directory.
-        /// </summary>
-        /// <param name="SteamPath">The path to the Steam directory.</param>
-        /// <param name="OutputPath">The path to spit the contents of .pak files into. </param>
-        /// <param name="PakListBox">The listbox containing the .pak files.</param>
-        /// <param name="PakDictionary">The dictionary with details concerning all the .pak files.</param>
-        public static void UnpackMultiplePaks(string SteamPath, string OutputPath, ListBox PakListBox, Dictionary<string, string> PakDictionary)
+        private static string TryGetAssetUnpackerPath(string SteamPath)
         {
-            
+            string assetUnpackerPath = $"{SteamPath}\\steamapps\\common\\Starbound\\win32\\asset_unpacker.exe";
+            if (File.Exists(assetUnpackerPath))
+            {
+                return assetUnpackerPath;
+            }
+            else return null;
         }
     }
     

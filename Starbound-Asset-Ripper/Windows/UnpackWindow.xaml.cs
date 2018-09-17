@@ -19,9 +19,24 @@ namespace Starbound_Asset_Ripper.Windows
     /// </summary>
     public partial class UnpackWindow : Window
     {
-        public UnpackWindow()
+        private string _steamPath;
+        private string _outputPath;
+        private Dictionary<string, string[]> _targetPaksDict;
+
+        public UnpackWindow(string SteamPath, string OutputPath, Dictionary<string, string[]>PaksToUnpack)
         {
             InitializeComponent();
+            _steamPath = SteamPath;
+            _outputPath = OutputPath;
+            _targetPaksDict = PaksToUnpack;
+        }
+
+        private void Unpack()
+        {
+            foreach (KeyValuePair<string, string[]>kvp in _targetPaksDict)
+            {
+
+            }
         }
     }
 }

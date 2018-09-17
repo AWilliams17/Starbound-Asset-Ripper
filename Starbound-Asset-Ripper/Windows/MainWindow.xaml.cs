@@ -28,7 +28,7 @@ namespace Starbound_Asset_Ripper
     {
         // Misc
         private static Config config = new Config();
-        private static ObservableConcurrentDictionary<string, string> pakDictionary = new ObservableConcurrentDictionary<string, string>();
+        private static ObservableConcurrentDictionary<string, string[]> pakDictionary = new ObservableConcurrentDictionary<string, string[]>();
 
         // Windows
         private static UpdateWindow updateWindow;
@@ -58,7 +58,7 @@ namespace Starbound_Asset_Ripper
                 }
                 catch (RegSaveException ex)
                 {
-                    MessageBox.Show($"Failed to save default settings. Error message: {ex.Message}");
+                    MessageBox.Show($"Failed to save default settings. Error message: {ex.Message}", "Error while saving settings to Registry.");
                 }
             }
             // Update the path textboxes
@@ -66,7 +66,7 @@ namespace Starbound_Asset_Ripper
             HandleOutputPath();
         }
 
-        public ObservableConcurrentDictionary<string, string> PakListBoxItems
+        public ObservableConcurrentDictionary<string, string[]> PakListBoxItems
         {
             get { return pakDictionary; }
         }
@@ -128,8 +128,8 @@ namespace Starbound_Asset_Ripper
                 try
                 {
                     string workshopPath = WorkshopPathHelper.TryGetWorkShopPath(steamPath);
-                    Dictionary<string, string> pakFiles = PakUtils.GetPakFiles(workshopPath);
-                    foreach (KeyValuePair<string, string> kvp in pakFiles)
+                    Dictionary<string, string[]> pakFiles = PakUtils.GetPakFiles(workshopPath);
+                    foreach (KeyValuePair<string, string[]> kvp in pakFiles)
                     {
                         pakDictionary.Add(kvp.Key, kvp.Value);
                     }
@@ -171,10 +171,11 @@ namespace Starbound_Asset_Ripper
                     {
                         Process.Start(redditThreadLink);
                     }
+                    else MessageBox.Show("Failed to get Reddit thread link from Github Readme.", "Failed to find Reddit thread link");
                 }
-                catch (WebException)
+                catch (WebException ex)
                 {
-                    MessageBox.Show("Failed to get Reddit thread link from Github Readme.");
+                    MessageBox.Show($"Error occurred while getting Reddit thread link from Github Readme: {ex.Message}", "Error getting Reddit thread link");
                 }
             });
         }
@@ -190,12 +191,37 @@ namespace Starbound_Asset_Ripper
         
         private async void UnpackSelectedBtn_Click(object sender, RoutedEventArgs e)
         {
+            // Get the selected values
+            // Pass it to the UnpackWindow constructor
+            string steamPath = config.settings.GetOption<string>("SteamPath");
+            string outputPath = config.settings.GetOption<string>("OutputPath");
+            Dictionary<string, string[]> targetPaks = new Dictionary<string, string[]>();
 
+            foreach (KeyValuePair<string, string[]>kvp in PakListBox.SelectedItems)
+            {
+                targetPaks.Add(kvp.Key, kvp.Value);
+            }
+
+            BeginUnpackOperation(steamPath, outputPath, targetPaks);
         }
 
         private async void UnpackAllBtn_Click(object sender, RoutedEventArgs e)
         {
-           
+            string steamPath = config.settings.GetOption<string>("SteamPath");
+            string outputPath = config.settings.GetOption<string>("OutputPath");
+            Dictionary<string, string[]> allPaks = new Dictionary<string, string[]>(pakDictionary); // Converting ObservableDict to Dictionary is a pain
+
+            BeginUnpackOperation(steamPath, outputPath, allPaks);
+        }
+
+        private void BeginUnpackOperation(string SteamPath, string OutputPath, Dictionary<string, string[]> PakFiles)
+        {
+            if (!WPFUtils.WindowHelpers.IsWindowOpen(typeof(UnpackWindow)))
+            {
+                UnpackWindow unpackWindow = new UnpackWindow(SteamPath, OutputPath, PakFiles);
+                unpackWindow.Show();
+            }
+            else MessageBox.Show("Another unpack operation is currently in progress.");
         }
 
         private void RefreshPakListBtn_Click(Object sender, RoutedEventArgs e)
