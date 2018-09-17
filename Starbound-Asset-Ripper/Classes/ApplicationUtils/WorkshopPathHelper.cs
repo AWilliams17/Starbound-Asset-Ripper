@@ -3,9 +3,10 @@
 namespace ApplicationUtils
 {
     /// <summary>
-    /// Application-specific helper class regarding files.
+    /// Application-specific helper class which contains a function for getting the workshop path from the Steam directory.
+    /// Probably going to just move this somewhere else and delete this file.
     /// </summary>
-    public static class FileUtilsRelated
+    public static class WorkshopPathHelper
     {
         /// <summary>
         /// Attempt to get the Starbound workshop path from the Steam directory.

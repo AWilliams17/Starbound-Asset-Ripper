@@ -16,6 +16,7 @@ using System.Windows.Data;
 using System.Collections.Concurrent;
 using System.Windows.Controls;
 using Registrar;
+using System.Diagnostics;
 
 namespace Starbound_Asset_Ripper
 {
@@ -71,7 +72,7 @@ namespace Starbound_Asset_Ripper
 
         private void OutputPathBtn_Click(object sender, RoutedEventArgs e)
         {
-            string outputPath = FileUtils.SelectFolderDialog("Select the folder to unload pak contents to.");
+            string outputPath = FileUtils.DialogHelpers.SelectFolderDialog("Select the folder to unload pak contents to.");
             if (outputPath != null)
             {
                 config.settings.SetOption("OutputPath", outputPath);
@@ -81,7 +82,7 @@ namespace Starbound_Asset_Ripper
 
         private void SteamPathBtn_Click(object sender, RoutedEventArgs e)
         {
-            string steamPath = FileUtils.SelectFolderDialog("Select the Steam folder.");
+            string steamPath = FileUtils.DialogHelpers.SelectFolderDialog("Select the Steam folder.");
             if (steamPath != null)
             {
                 config.settings.SetOption("SteamPath", steamPath);
@@ -125,7 +126,7 @@ namespace Starbound_Asset_Ripper
             {
                 try
                 {
-                    string workshopPath = FileUtils.GetWorkShopPath(steamPath);
+                    string workshopPath = WorkshopPathHelper.TryGetWorkShopPath(steamPath);
                     Dictionary<string, string> pakFiles = PakUtils.GetPakFiles(workshopPath);
                     foreach (KeyValuePair<string, string>kvp in pakFiles)
                     {
@@ -155,12 +156,19 @@ namespace Starbound_Asset_Ripper
 
         private void GithubBtn_Click(object sender, RoutedEventArgs e)
         {
-            WebUtilsRelated.OpenGithubPage();
+            Process.Start("https://github.com/AWilliams17/Starbound-Asset-Ripper/");
         }
 
         private void RedditBtn_Click(object sender, RoutedEventArgs e)
         {
-            WebUtilsRelated.OpenRedditThread();
+            // TOOD: Try-Catch.
+            // Also since it can time out make it async.
+            string redditThreadLink = WebUtilsRelated.TryGetRedditThread();
+            if (redditThreadLink != null)
+            {
+                Process.Start(redditThreadLink);
+            }
+            // TODO: Else throw message box.
         }
 
         private void UpdateBtn_Click(object sender, RoutedEventArgs e)

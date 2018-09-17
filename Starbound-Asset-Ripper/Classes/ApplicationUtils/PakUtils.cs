@@ -15,8 +15,8 @@ namespace ApplicationUtils
         /// Attempts to search for all files in the supplied path ending with a '.pak' file extension.
         /// </summary>
         /// <param name="WorkshopPath">The path to the folder to search for .pak files in.</param>
-        /// <returns>A dictionary with the folder name as a key, and the .pak file path as the value, or null if it didn't find any.</returns>
-        public static Dictionary<string, string> TryGetPakFiles(string WorkshopPath)
+        /// <returns>A dictionary with the folder name as a key, and the .pak file path as the value.</returns>
+        public static Dictionary<string, string> GetPakFiles(string WorkshopPath)
         {
             Dictionary<string, string> pakFiles = new Dictionary<string, string>();
             string[] workshopModFolders = Directory.GetDirectories(WorkshopPath);
@@ -28,19 +28,14 @@ namespace ApplicationUtils
                 {
                     if (file.Contains(".pak"))
                     {
-                        string dictKey = $".pak in {FileUtils.GetFolderNameFromFilePath(file)}";
+                        string dictKey = $".pak in {FileUtils.FolderNameFromPath.GetFolderNameFromFilePath(file)}";
                         string dictVal = file;
                         pakFiles.Add(dictKey, dictVal);
                     }
                 }
             }
 
-            if (pakFiles.Count != 0)
-            {
-                return pakFiles;
-            }
-
-            else return null;
+            return pakFiles;
         }
 
         /// <summary>

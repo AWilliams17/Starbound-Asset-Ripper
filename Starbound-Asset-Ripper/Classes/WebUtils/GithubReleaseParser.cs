@@ -67,7 +67,7 @@ namespace WebUtils
         /// </summary>
         /// <param name="GithubUsername">The username of the user who owns the repo to check.</param>
         /// <param name="RepoName">The name of the repo to check.</param>
-        /// <param name="Timeout">After this specified amount of time, the request will time out.</param>
+        /// <param name="Timeout">After this specified amount of time in seconds, the request will time out.</param>
         /// <returns>True/False depending on if an update is availble or not.</returns>
         public static bool GetUpdateAvailable(string GithubUsername, string RepoName, int Timeout)
         {

@@ -18,14 +18,17 @@ namespace WebUtils
         {
             string readmeText = WebRequests.TryDownloadString(ReadmeURL, TimeOut);
 
-            using (StringReader sr = new StringReader(readmeText))
+            if (readmeText != null)
             {
-                string currentLine;
-                while ((currentLine = sr.ReadLine()) != null)
+                using (StringReader sr = new StringReader(readmeText))
                 {
-                    if (currentLine.StartsWith(LinePrefix))
+                    string currentLine;
+                    while ((currentLine = sr.ReadLine()) != null)
                     {
-                        return currentLine.Substring(LinePrefix.Length);
+                        if (currentLine.StartsWith(LinePrefix))
+                        {
+                            return currentLine.Substring(LinePrefix.Length);
+                        }
                     }
                 }
             }

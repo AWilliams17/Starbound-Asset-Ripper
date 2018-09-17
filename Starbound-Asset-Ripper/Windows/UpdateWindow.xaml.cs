@@ -28,22 +28,30 @@ namespace Starbound_Asset_Ripper.Windows
             {
                 try
                 {
-                    updateAvailable = WebUtilsRelated.UpdateAvailable();
+                    updateAvailable = WebUtils.LatestReleaseParser.GetUpdateAvailable("AWilliams17", "Starbound-Asset-Ripper", 5);
                     DispatcherTimer.Tick += DispatcherTimer_Tick;
                     DispatcherTimer.Interval = new TimeSpan(0, 0, 1);
                     DispatcherTimer.Start();
                 }
-                catch (WebException ex)
+                catch (Exception ex)
                 {
                     DispatcherTimer.Stop();
-                    if (ex.Status == WebExceptionStatus.Timeout)
+
+                    if (ex is WebException)
                     {
-                        timedOut = true;
+                        WebException webEX = (WebException)ex;
+                        if (webEX.Status == WebExceptionStatus.Timeout)
+                        {
+                            timedOut = true;
+                        }
                     }
                     else
                     {
+                        if (ex is FormatException)
+                        {
+                            checkFailed = true;
+                        }
                         MessageBox.Show(ex.Message);
-                        checkFailed = true;
                     }
                 }
             });

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using WebUtils;
+﻿using WebUtils;
 
 namespace ApplicationUtils
 {
@@ -17,14 +16,6 @@ namespace ApplicationUtils
             string readmeLink = "https://raw.githubusercontent.com/AWilliams17/Starbound-Asset-Ripper/master/README.md";
             string redditLink = GithubReadmeParser.TryGetLineFromReadme(readmeLink, "Reddit: ", 5);
             return redditLink;
-        }
-
-        /// <summary>
-        /// Just calls Process.Start to open a web browser with the github repo link.
-        /// </summary>
-        public static void OpenGithubPage()
-        {
-            Process.Start("https://github.com/AWilliams17/Starbound-Asset-Ripper/");
         }
     }
 }
