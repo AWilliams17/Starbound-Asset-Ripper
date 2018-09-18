@@ -87,6 +87,9 @@
     <Reference Include="Registrar, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Registrar.1.0.0\lib\netstandard2.0\Registrar.dll</HintPath>
     </Reference>
+    <Reference Include="SharpUtils">
+      <HintPath>..\..\SharpUtils\SharpUtils\bin\Release\SharpUtils.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -120,10 +123,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\AssetUnpacker.cs" />
-    <Compile Include="Classes\Utils\FileUtils\DialogHelpers.cs" />
-    <Compile Include="Classes\Utils\FileUtils\FileSizeHelper.cs" />
-    <Compile Include="Classes\Utils\FileUtils\FolderNameHelper.cs" />
-    <Compile Include="Classes\Utils\WPFUtils\WindowHelpers.cs" />
     <Compile Include="Windows\UnpackWindow.xaml.cs">
       <DependentUpon>UnpackWindow.xaml</DependentUpon>
     </Compile>
@@ -138,12 +137,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Utils\ApplicationUtils\WorkshopPathHelper.cs" />
-    <Compile Include="Classes\Utils\ApplicationUtils\PakUtils.cs" />
-    <Compile Include="Classes\Utils\ApplicationUtils\WebUtilsRelated.cs" />
-    <Compile Include="Classes\Utils\WebUtils\GithubReadmeParser.cs" />
-    <Compile Include="Classes\Utils\WebUtils\GithubReleaseParser.cs" />
-    <Compile Include="Classes\Utils\WebUtils\WebRequests.cs" />
+    <Compile Include="Classes\ApplicationUtils\WorkshopPathHelper.cs" />
+    <Compile Include="Classes\ApplicationUtils\PakUtils.cs" />
+    <Compile Include="Classes\ApplicationUtils\WebUtilsRelated.cs" />
     <Compile Include="Classes\Config\ConfigContainer.cs" />
     <Compile Include="Classes\Config\Validators.cs" />
     <Compile Include="Windows\MainWindow.xaml.cs">
