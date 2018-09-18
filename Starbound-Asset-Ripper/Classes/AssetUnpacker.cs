@@ -24,7 +24,7 @@ namespace Starbound_Asset_Ripper
         {
             _steamPath = SteamPath;
             _outputPath = OutputPath;
-            _assetUnpackerPath = TryGetAssetUnpackerPath(SteamPath);
+            _assetUnpackerPath = TryGetAssetUnpackerPath();
             _assetUnpackerProcess = new Process
             {
                 EnableRaisingEvents = true,
@@ -40,7 +40,7 @@ namespace Starbound_Asset_Ripper
         public Task<string> UnpackPakFile(string PakFilePath) // TODO: Should handle ErrorOutput as well.
         {
             Dictionary<string, string> operationResults = new Dictionary<string, string>();
-            string assetUnpackerPath = TryGetAssetUnpackerPath(_steamPath);
+            string assetUnpackerPath = TryGetAssetUnpackerPath();
             string[] assetUnpackerArgs = new string[2] { $"\"{PakFilePath}\"", $"\"{_outputPath}\"" };
             string assetUnpackerOutput = String.Empty;
             TaskCompletionSource<string> taskCompletionSource = new TaskCompletionSource<string>();
@@ -87,11 +87,10 @@ namespace Starbound_Asset_Ripper
         /// <summary>
         /// Get the asset_unpacker.exe path from the Steam path. Throws FileNotFoundException if it wasn't found.
         /// </summary>
-        /// <param name="SteamPath">Path to the Steam directory.</param>
         /// <returns>The asset unpacker path.</returns>
-        private string TryGetAssetUnpackerPath(string SteamPath)
+        private string TryGetAssetUnpackerPath()
         {
-            string assetUnpackerPath = $"{SteamPath}\\steamapps\\common\\Starbound\\win32\\asset_unpacker.exe";
+            string assetUnpackerPath = $"{_steamPath}\\steamapps\\common\\Starbound\\win32\\asset_unpacker.exe";
             if (File.Exists(assetUnpackerPath))
             {
                 return assetUnpackerPath;
