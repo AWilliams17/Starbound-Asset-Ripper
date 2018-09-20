@@ -25,7 +25,7 @@ namespace Starbound_Asset_Ripper.Classes
         public Pak(string PakPath, long PakSize, DateTime PakLastModifiedDate)
         {
             PakFilePath = PakFilePath;
-            PakFileSize = PakFileSize;
+            PakFileSize = PakSize;
             PakLastModified = PakLastModifiedDate;
             PakFolderName = GetPakFolderName(PakPath);
         }

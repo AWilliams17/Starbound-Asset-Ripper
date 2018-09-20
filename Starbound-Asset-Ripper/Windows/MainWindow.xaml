@@ -30,25 +30,13 @@
                 <TextBox x:Name="OutputPathTextBox" TextWrapping="Wrap" Width="298" IsReadOnly="True"/>
                 <Button x:Name="OutputPathBtn" Content="..." Width="56" Click="OutputPathBtn_Click"/>
             </StackPanel>
-            <ListView x:Name="PakListBox" Height="161" Margin="10,0" BorderBrush="#FF474747" BorderThickness="2" SelectionMode="Multiple" ItemsSource="{Binding PakListBoxItems, UpdateSourceTrigger=PropertyChanged}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Folder Name" Width="Auto" DisplayMemberBinding="{Binding PakFolderName}"/>
-                        <GridViewColumn Header="Last Modified" Width="Auto" DisplayMemberBinding="{Binding PakLastModified}"/>
-                        <GridViewColumn Header="File Size" Width="Auto" DisplayMemberBinding="{Binding PakFileSize}"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-            <!--
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Key}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            -->
+            <DataGrid x:Name="PakListBox" Height="161" Margin="10,0" AutoGenerateColumns="False" BorderBrush="#FF474747" BorderThickness="2" CanUserSortColumns="True" ItemsSource="{Binding PakListBoxItems, UpdateSourceTrigger=PropertyChanged}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Folder Name" Width="Auto" Binding="{Binding PakFolderName}"/>
+                    <DataGridTextColumn Header="Last Modified" Width="Auto" Binding="{Binding PakLastModified}"/>
+                    <DataGridTextColumn Header="File Size" Width="*" Binding="{Binding PakFileSize, Converter={StaticResource PakFileSizeConverter}}"/>
+                </DataGrid.Columns>
+            </DataGrid>
             <Grid Height="26" Margin="10,10">
                 <Button x:Name="UnpackAllBtn" Content="Unpack All" Width="105" HorizontalAlignment="Left" Click="UnpackAllBtn_Click" IsEnabled="{Binding ElementName=PakListBox, Path=HasItems}"/>
                 <Button x:Name="UnpackSelectedBtn" Content="Unpack" Width="105" HorizontalAlignment="Right" Click="UnpackSelectedBtn_Click" IsEnabled="{Binding ElementName=PakListBox, Path=SelectedItems.Count}"/>

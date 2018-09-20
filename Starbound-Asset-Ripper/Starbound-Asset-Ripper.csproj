@@ -124,6 +124,7 @@
     </ApplicationDefinition>
     <Compile Include="Classes\PakFile\AssetUnpacker.cs" />
     <Compile Include="Classes\PakFile\Pak.cs" />
+    <Compile Include="Classes\PakFile\PakFileSizeConverter.cs" />
     <Compile Include="Windows\UnpackWindow.xaml.cs">
       <DependentUpon>UnpackWindow.xaml</DependentUpon>
     </Compile>

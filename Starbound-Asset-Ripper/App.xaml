@@ -2,9 +2,11 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Starbound_Asset_Ripper"
+             xmlns:classes="clr-namespace:Starbound_Asset_Ripper.Classes"
              StartupUri="Windows/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <classes:PakFileSizeConverter x:Key="PakFileSizeConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
