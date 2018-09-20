@@ -1,17 +1,20 @@
-﻿using System;
+﻿using SharpUtils.MiscUtils;
+using SharpUtils.FileUtils;
+using SharpUtils.WPFUtils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using Starbound_Asset_Ripper.Classes;
 using Starbound_Asset_Ripper.ConfigContainer;
-using ApplicationUtils;
-using System.Security.Principal;
-using System.Threading.Tasks;
 using Starbound_Asset_Ripper.Windows;
+using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using Registrar;
 using System.Diagnostics;
 using System.Net;
-
+using SharpUtils.WebUtils;
+using System.Collections.ObjectModel;
 
 namespace Starbound_Asset_Ripper
 {
@@ -21,7 +24,6 @@ namespace Starbound_Asset_Ripper
     public partial class MainWindow
     {
         private static Config config = new Config();
-        private static ObservableConcurrentDictionary<string, string[]> pakDictionary = new ObservableConcurrentDictionary<string, string[]>();
         
         public MainWindow()
         {
@@ -29,11 +31,6 @@ namespace Starbound_Asset_Ripper
             InitializeComponent();
             ResizeMode = 0;
             Closing += MainWindow_Closing;
-
-            //if (!(new WindowsPrincipal(WindowsIdentity.GetCurrent())).IsInRole(WindowsBuiltInRole.Administrator))
-            //{
-            //    MessageBox.Show("Warning - You are not running as an administrator. It is highly recommended you do so.", "Not Administrator Warning");
-            //}
 
             try
             {
@@ -55,14 +52,14 @@ namespace Starbound_Asset_Ripper
             HandleOutputPath();
         }
 
-        public ObservableConcurrentDictionary<string, string[]> PakListBoxItems
+        public ObservableCollection<Pak> PakListBoxItems
         {
-            get { return pakDictionary; }
+            get { return Pak.PakList; }
         }
 
         private void OutputPathBtn_Click(object sender, RoutedEventArgs e)
         {
-            string outputPath = FileUtils.DialogHelpers.SelectFolderDialog("Select the folder to unload pak contents to.");
+            string outputPath = DialogHelpers.SelectFolderDialog("Select the folder to unload pak contents to.");
             if (outputPath != null)
             {
                 config.settings.SetOption("OutputPath", outputPath);
@@ -72,7 +69,7 @@ namespace Starbound_Asset_Ripper
 
         private void SteamPathBtn_Click(object sender, RoutedEventArgs e)
         {
-            string steamPath = FileUtils.DialogHelpers.SelectFolderDialog("Select the Steam folder.");
+            string steamPath = DialogHelpers.SelectFolderDialog("Select the Steam folder.");
             if (steamPath != null)
             {
                 config.settings.SetOption("SteamPath", steamPath);
@@ -116,12 +113,7 @@ namespace Starbound_Asset_Ripper
             {
                 try
                 {
-                    string workshopPath = WorkshopPathHelper.TryGetWorkShopPath(steamPath);
-                    Dictionary<string, string[]> pakFiles = PakUtils.GetPakFiles(workshopPath);
-                    foreach (KeyValuePair<string, string[]> kvp in pakFiles)
-                    {
-                        pakDictionary.Add(kvp.Key, kvp.Value);
-                    }
+                    Pak.GetPakFiles(steamPath);
                 }
                 catch (DirectoryNotFoundException ex)
                 {
@@ -131,12 +123,9 @@ namespace Starbound_Asset_Ripper
             }
         }
 
-        private void ClearPakDictionary()  // Since ObservableConcurrentDictionary doesn't have Clear()?
+        private void ClearPakDictionary()
         {
-            foreach (string key in pakDictionary.Keys)
-            {
-                pakDictionary.Remove(key);
-            }
+
         }
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
@@ -155,7 +144,9 @@ namespace Starbound_Asset_Ripper
             {
                 try
                 {
-                    string redditThreadLink = WebUtilsRelated.TryGetRedditThread();
+                    string readmeLink = "https://raw.githubusercontent.com/AWilliams17/Starbound-Asset-Ripper/master/README.md";
+                    string redditThreadLink = GithubReadmeParser.TryGetLineFromReadme(readmeLink, "Reddit: ", 5);
+
                     if (redditThreadLink != null)
                     {
                         Process.Start(redditThreadLink);
@@ -171,43 +162,43 @@ namespace Starbound_Asset_Ripper
 
         private void UpdateBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (!WPFUtils.WindowHelpers.IsWindowOpen(typeof(UpdateWindow)))
+            if (!WindowHelpers.IsWindowOpen(typeof(UpdateWindow)))
             {
                 UpdateWindow updateWindow = new UpdateWindow();
                 updateWindow.Show();
             }
         }
         
-        private async void UnpackSelectedBtn_Click(object sender, RoutedEventArgs e)
+        private void UnpackSelectedBtn_Click(object sender, RoutedEventArgs e)
         {
             // Get the selected values
             // Pass it to the UnpackWindow constructor
             string steamPath = config.settings.GetOption<string>("SteamPath");
             string outputPath = config.settings.GetOption<string>("OutputPath");
-            Dictionary<string, string[]> targetPaks = new Dictionary<string, string[]>();
+            ObservableCollection<Pak> targetPaks = new ObservableCollection<Pak>();
 
-            foreach (KeyValuePair<string, string[]>kvp in PakListBox.SelectedItems)
+            foreach (Pak pakFile in PakListBox.SelectedItems)
             {
-                targetPaks.Add(kvp.Key, kvp.Value);
+                targetPaks.Add(pakFile);
             }
 
             BeginUnpackOperation(steamPath, outputPath, targetPaks);
         }
 
-        private async void UnpackAllBtn_Click(object sender, RoutedEventArgs e)
+        private void UnpackAllBtn_Click(object sender, RoutedEventArgs e)
         {
             string steamPath = config.settings.GetOption<string>("SteamPath");
             string outputPath = config.settings.GetOption<string>("OutputPath");
-            Dictionary<string, string[]> allPaks = new Dictionary<string, string[]>(pakDictionary); // Converting ObservableDict to Dictionary is a pain
 
-            BeginUnpackOperation(steamPath, outputPath, allPaks);
+
+            BeginUnpackOperation(steamPath, outputPath, Pak.PakList);
         }
 
-        private void BeginUnpackOperation(string SteamPath, string OutputPath, Dictionary<string, string[]> PakFiles)
+        private void BeginUnpackOperation(string SteamPath, string OutputPath, ObservableCollection<Pak>TargetPaks)
         {
-            if (!WPFUtils.WindowHelpers.IsWindowOpen(typeof(UnpackWindow)))
+            if (!WindowHelpers.IsWindowOpen(typeof(UnpackWindow)))
             {
-                UnpackWindow unpackWindow = new UnpackWindow(SteamPath, OutputPath, PakFiles);
+                UnpackWindow unpackWindow = new UnpackWindow(SteamPath, OutputPath, TargetPaks);
                 unpackWindow.Show();
             }
             else MessageBox.Show("Another unpack operation is currently in progress.");

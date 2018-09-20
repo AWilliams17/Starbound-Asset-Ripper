@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:Starbound_Asset_Ripper"
+        xmlns:classes="clr-namespace:Starbound_Asset_Ripper.Classes"
         mc:Ignorable="d"
         Title="Starbound Asset Ripper" Height="347.421" Width="460.58" Background="#FF252525" TitleCharacterCasing="Normal">
     <DockPanel LastChildFill="False">
@@ -32,9 +33,9 @@
             <ListView x:Name="PakListBox" Height="161" Margin="10,0" BorderBrush="#FF474747" BorderThickness="2" SelectionMode="Multiple" ItemsSource="{Binding PakListBoxItems, UpdateSourceTrigger=PropertyChanged}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Pak" Width="Auto" DisplayMemberBinding="{Binding Key}"/>
-                        <GridViewColumn Header="Last Modified" Width="Auto" DisplayMemberBinding="{Binding Value[2]}"/>
-                        <GridViewColumn Header="Size" Width="Auto" DisplayMemberBinding="{Binding Value[1]}"/>
+                        <GridViewColumn Header="Folder Name" Width="Auto" DisplayMemberBinding="{Binding PakFolderName}"/>
+                        <GridViewColumn Header="Last Modified" Width="Auto" DisplayMemberBinding="{Binding PakLastModified}"/>
+                        <GridViewColumn Header="File Size" Width="Auto" DisplayMemberBinding="{Binding PakFileSize}"/>
                     </GridView>
                 </ListView.View>
             </ListView>

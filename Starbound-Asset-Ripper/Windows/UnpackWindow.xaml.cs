@@ -1,5 +1,8 @@
-﻿using System;
+﻿using SharpUtils.FileUtils;
+using Starbound_Asset_Ripper.Classes;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,14 +19,14 @@ namespace Starbound_Asset_Ripper.Windows
         private string _steamPath;
         private string _outputPath;
         private AssetUnpacker _assetUnpacker;
-        private Dictionary<string, string[]> _targetPaksDict;
+        private ObservableCollection<Pak> _targetPaks;
 
-        public UnpackWindow(string SteamPath, string OutputPath, Dictionary<string, string[]>PaksToUnpack)
+        public UnpackWindow(string SteamPath, string OutputPath, ObservableCollection<Pak>PaksToUnpack)
         {
             InitializeComponent();
             _steamPath = SteamPath;
             _outputPath = OutputPath;
-            _targetPaksDict = PaksToUnpack;
+            _targetPaks = PaksToUnpack;
             try
             {
                 _assetUnpacker = new AssetUnpacker(SteamPath, OutputPath);
@@ -40,15 +43,14 @@ namespace Starbound_Asset_Ripper.Windows
         {
             await Task.Run(async () =>
             {
-                int itemsRemaining = _targetPaksDict.Count;
+                int itemsRemaining = _targetPaks.Count;
                 
-                foreach (KeyValuePair<string, string[]> kvp in _targetPaksDict)
+                foreach (Pak pak in _targetPaks)
                 {
-                    string pakPath = kvp.Value[0];
-                    string pakFileSize = kvp.Value[1];
+                    string pakFileSize = FileSizeHelper.GetHumanReadableSize(pak.PakFileSize);
                     string result = null;
-                    SetLabels(kvp.Key, pakFileSize, itemsRemaining);
-                    result = await _assetUnpacker.UnpackPakFile(pakPath);
+                    SetLabels(pak.PakFolderName, pakFileSize, itemsRemaining);
+                    result = await _assetUnpacker.UnpackPakFile(pak.PakFilePath);
                     if (!_taskRunning) break;
                     itemsRemaining -= 1;
                     AddResultToListBox(result);

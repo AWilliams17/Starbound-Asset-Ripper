@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpUtils.WebUtils;
+using System;
 using System.Diagnostics;
 using System.Net;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace Starbound_Asset_Ripper.Windows
                 try
                 {
                     DispatcherTimer.Start();
-                    updateAvailable = WebUtils.LatestReleaseParser.GetUpdateAvailable("AWilliams17", "Starbound-Asset-Ripper", 5);
+                    updateAvailable = LatestReleaseParser.GetUpdateAvailable("AWilliams17", "Starbound-Asset-Ripper", 5);
                 }
                 catch (Exception ex)
                 {
