@@ -1,7 +1,9 @@
-﻿using System;
+﻿using SharpUtils.FileUtils;
+using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
-using System.Windows;
+using System.Windows.Data;
 
 namespace Starbound_Asset_Ripper.Classes
 {
@@ -83,6 +85,22 @@ namespace Starbound_Asset_Ripper.Classes
             }
 
             throw new DirectoryNotFoundException("The Starbound workshop folder was not found in the Steam path. Do you have any mods installed?");
+        }
+    }
+
+    /// <summary>
+    /// When used as a Converter in WPF, this will parse the bytes into their human readable string file size format
+    /// for proper display in a control. Allows sorting to be used.
+    /// </summary>
+    public class PakFileSizeConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return FileSizeHelper.GetHumanReadableSize(long.Parse(value.ToString()));
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }
