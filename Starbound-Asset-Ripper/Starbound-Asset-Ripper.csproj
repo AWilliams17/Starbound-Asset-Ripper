@@ -87,7 +87,8 @@
     <Reference Include="Registrar, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Registrar.1.0.0\lib\netstandard2.0\Registrar.dll</HintPath>
     </Reference>
-    <Reference Include="SharpUtils">
+    <Reference Include="SharpUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharpUtils\SharpUtils\bin\Release\SharpUtils.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -124,7 +125,6 @@
     </ApplicationDefinition>
     <Compile Include="Classes\PakFile\AssetUnpacker.cs" />
     <Compile Include="Classes\PakFile\Pak.cs" />
-    <Compile Include="Classes\PakFile\PakFileSizeConverter.cs" />
     <Compile Include="Windows\UnpackWindow.xaml.cs">
       <DependentUpon>UnpackWindow.xaml</DependentUpon>
     </Compile>

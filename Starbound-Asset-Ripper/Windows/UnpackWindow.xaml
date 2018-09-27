@@ -1,5 +1,5 @@
 ﻿<Controls:MetroWindow
-        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls" x:Class="Starbound_Asset_Ripper.Windows.UnpackWindow"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls" x:Class="Starbound_Asset_Ripper.Windows.UnpackWindow" Closing="UnpackWindow_Closing"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"

@@ -2,19 +2,19 @@
 using System;
 using System.Diagnostics;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
-// TODO: This needs to be checked to make sure the Tasks are doing what they should.
-// Pretty sure this is not going to fly.
 namespace Starbound_Asset_Ripper.Windows
 {
     /// <summary>
     /// Interaction logic for UpdateWindow.xaml
     /// </summary>
-    public partial class UpdateWindow : Window
+    public partial class UpdateWindow
     {
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         DispatcherTimer DispatcherTimer = new DispatcherTimer();
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
@@ -23,42 +23,17 @@ namespace Starbound_Asset_Ripper.Windows
 
         private async void Update()
         {
-            bool updateAvailable = false;
-            string checkFailureMessage = null;
-            DispatcherTimer.Tick += DispatcherTimer_Tick;
-            DispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-            await Task.Run(() =>
+            try
             {
-                try
-                {
-                    DispatcherTimer.Start();
-                    updateAvailable = LatestReleaseParser.GetUpdateAvailable("AWilliams17", "Starbound-Asset-Ripper", 5);
-                }
-                catch (Exception ex)
-                {
-                    DispatcherTimer.Stop();
+                bool updateAvailable = false;
 
-                    if (ex is WebException)
-                    {
-                        WebException webEX = (WebException)ex;
-                        if (webEX.Status == WebExceptionStatus.Timeout)
-                        {
-                            checkFailureMessage = "The check timed out after 5 seconds.";
-                        }
-                    }
-                    else
-                    {
-                        if (ex is FormatException)
-                        {
-                            checkFailureMessage = "Error parsing JSON. Check failed.";
-                        }
-                    }
-                }
-            });
-            DispatcherTimer.Stop();
+                DispatcherTimer.Tick += DispatcherTimer_Tick;
+                DispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+                DispatcherTimer.Start();
+                
+                updateAvailable = await GithubReleaseParser.GetUpdateAvailableAsync("AWilliams17", "Starbound-Asset-Ripper", 5, cancellationTokenSource.Token);
 
-            if (checkFailureMessage == null)
-            {
+                DispatcherTimer.Stop();
                 if (updateAvailable)
                 {
                     string updateAvailableMessage = "An update is available. Would you like to go to the download page?";
@@ -70,8 +45,18 @@ namespace Starbound_Asset_Ripper.Windows
                 }
                 else MessageBox.Show("No updates found.", "No updates available.");
             }
-            else MessageBox.Show(checkFailureMessage, "Error checking for updates");
-
+            catch (WebException ex)
+            {
+                DispatcherTimer.Stop(); // So that when an error message comes up the timer still isn't ticking.
+                if (ex.Status == WebExceptionStatus.Timeout)
+                {
+                    MessageBox.Show("Check Timed Out after 5 seconds", "Check Timed Out");
+                }
+                else
+                {
+                    MessageBox.Show($"Error occurred while checking for updates: {ex.Message}", "Error checking for updates");
+                }
+            }
             Close();
         }
 
@@ -79,6 +64,16 @@ namespace Starbound_Asset_Ripper.Windows
         {
             InitializeComponent();
             Update();
+        }
+
+        private void UpdateWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            cancellationTokenSource.Cancel();
+        }
+
+        private void CancelBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

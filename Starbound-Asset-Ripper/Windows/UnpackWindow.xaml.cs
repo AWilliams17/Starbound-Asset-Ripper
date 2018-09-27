@@ -88,5 +88,11 @@ namespace Starbound_Asset_Ripper.Windows
             }
             else Close();
         }
+
+        private void UnpackWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _assetUnpacker.CancelCurrentOperation();
+            _taskRunning = false;
+        }
     }
 }

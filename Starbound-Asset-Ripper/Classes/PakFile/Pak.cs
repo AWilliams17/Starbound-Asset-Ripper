@@ -26,7 +26,7 @@ namespace Starbound_Asset_Ripper.Classes
         /// <param name="LastModifiedDate">The last modified date of the .pak file.</param>
         public Pak(string PakPath, long PakSize, DateTime PakLastModifiedDate)
         {
-            PakFilePath = PakFilePath;
+            PakFilePath = PakPath;
             PakFileSize = PakSize;
             PakLastModified = PakLastModifiedDate;
             PakFolderName = GetPakFolderName(PakPath);

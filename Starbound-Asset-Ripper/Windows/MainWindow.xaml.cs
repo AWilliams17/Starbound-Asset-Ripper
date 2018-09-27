@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.Net;
 using SharpUtils.WebUtils;
 using System.Collections.ObjectModel;
+using System.Threading;
 
 namespace Starbound_Asset_Ripper
 {
@@ -88,7 +89,6 @@ namespace Starbound_Asset_Ripper
             else
             {
                 SteamPathTextBox.Text = "Path to Steam installation...";
-                ClearPakDictionary();
             }
         }
 
@@ -107,6 +107,7 @@ namespace Starbound_Asset_Ripper
 
         private void TryLoadPakFiles()
         {
+            Pak.PakList.Clear();
             string steamPath = config.settings.GetOption<string>("SteamPath");
 
             if (steamPath != "")
@@ -118,14 +119,8 @@ namespace Starbound_Asset_Ripper
                 catch (DirectoryNotFoundException ex)
                 {
                     MessageBox.Show(ex.Message, "Starbound Workshop Folder not found.");
-                    ClearPakDictionary(); // If the path was previously correct, then clear out any detected paks.
                 }
             }
-        }
-
-        private void ClearPakDictionary()
-        {
-
         }
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
@@ -140,24 +135,23 @@ namespace Starbound_Asset_Ripper
 
         private async void RedditBtn_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Run(() =>
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            
+            try
             {
-                try
-                {
-                    string readmeLink = "https://raw.githubusercontent.com/AWilliams17/Starbound-Asset-Ripper/master/README.md";
-                    string redditThreadLink = GithubReadmeParser.TryGetLineFromReadme(readmeLink, "Reddit: ", 5);
+                string readmeLink = "https://raw.githubusercontent.com/AWilliams17/Starbound-Asset-Ripper/master/README.md";
+                string redditThreadLink = await GithubReadmeParser.GetLineFromReadmeAsync(readmeLink, "Reddit: ", 5, cancellationTokenSource.Token);
 
-                    if (redditThreadLink != null)
-                    {
-                        Process.Start(redditThreadLink);
-                    }
-                    else MessageBox.Show("Failed to get Reddit thread link from Github Readme.", "Failed to find Reddit thread link");
-                }
-                catch (WebException ex)
+                if (redditThreadLink != null)
                 {
-                    MessageBox.Show($"Error occurred while getting Reddit thread link from Github Readme: {ex.Message}", "Error getting Reddit thread link");
+                    Process.Start(redditThreadLink);
                 }
-            });
+                else MessageBox.Show("Failed to get Reddit thread link from Github Readme.", "Failed to find Reddit thread link");
+            }
+            catch (WebException ex)
+            {
+                MessageBox.Show($"Error occurred while getting Reddit thread link from Github Readme: {ex.Message}", "Error getting Reddit thread link");
+            }
         }
 
         private void UpdateBtn_Click(object sender, RoutedEventArgs e)
@@ -206,7 +200,6 @@ namespace Starbound_Asset_Ripper
 
         private void RefreshPakListBtn_Click(Object sender, RoutedEventArgs e)
         {
-            ClearPakDictionary();
             TryLoadPakFiles();
         }
 
