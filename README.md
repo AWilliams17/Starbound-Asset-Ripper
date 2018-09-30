@@ -29,10 +29,5 @@ file the tool has found.
 The tool also saves the paths, so no need to keep
 putting them in every time you restart the tool.  
 
-## Note on current state of code
-I am in the middle of a complete re-write of this application,
-so the codebase is pretty much in shambles, much like the great
-wall of Troy. The Trojan Horse? "I'll refactor it later" :p.  
-So this isn't really anywhere near being released right now.  
-Like I said, the code is bad in many places. I hope to fix it  
-and give it a proper release into the wild soon.
+## Preview
+![alt text](https://i.imgur.com/10iwQZL.png)
