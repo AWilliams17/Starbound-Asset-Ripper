@@ -206,6 +206,7 @@ namespace Starbound_Asset_Ripper
         private void MainWindow_Closing(object sender, EventArgs e)
         {
             config.settings.SaveSettings();
+            Application.Current.Shutdown();
         }
     }
 }
