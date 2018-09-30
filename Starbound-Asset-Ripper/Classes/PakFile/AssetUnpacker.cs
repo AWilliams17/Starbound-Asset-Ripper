@@ -5,6 +5,12 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+/*
+ * TODO:
+ * what if a file is being unpacked and the download folder vanishes/the asset unpacker process vanishes/the mod folder vanishes
+ * 
+ */
+
 namespace Starbound_Asset_Ripper
 {
     public class AssetUnpacker
