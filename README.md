@@ -31,3 +31,7 @@ putting them in every time you restart the tool.
 
 ## Preview
 ![alt text](https://i.imgur.com/10iwQZL.png)
+
+## Note before downloading source
+This project uses my [Registrar](https://github.com/AWilliams17/Registrar) library, which is not current on Nuget.org at this current time.  
+You'll have to download and import it if you want to mess around with the source.
